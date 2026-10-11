@@ -1,7 +1,7 @@
-/* The landing page's second stylesheet (index.html loads it after styles.css).
-   html[data-frame='drawn' | 'iphone'] switches the phone frame; everything else is the landing page. */
+/* The landing page's second stylesheet (index.html loads it after styles.css). */
 
-/* ---------- phone frame: shared ---------- */
+/* ---------- phone: a plain sticker phone, the same component in both sections ----------
+   just the screen, a solid black bezel, a black pill, and the white halo */
 
 /* sizes inside a device are in cqw = % of the device's own width */
 .device {
@@ -10,7 +10,7 @@
 
 .device-body {
   position: relative;
-  isolation: isolate;
+  transform: rotate(1.5deg);
 }
 
 .device-screen {
@@ -18,6 +18,9 @@
   aspect-ratio: 390 / 844;
   overflow: hidden;
   background: var(--blue);
+  border: 2.2cqw solid var(--ink);
+  border-radius: 15cqw;
+  box-shadow: 0 0 0 var(--halo) #fff;
 }
 
 /* the prototype renders at 390x844 and is scaled to the screen (--s, set in compare.js);
@@ -35,100 +38,12 @@
 .island {
   position: absolute;
   left: 50%;
+  top: 2.6cqw;
+  width: 28cqw;
+  height: 7.4cqw;
   transform: translateX(-50%);
   background: var(--ink);
   border-radius: 999px;
-}
-
-.device-btn {
-  display: none;
-}
-
-/* ---------- A. drawn: the landing page's own sticker phone ---------- */
-
-[data-frame='drawn'] .device-body {
-  padding: 5cqw;
-  background: #fff;
-  border: 2.5cqw solid var(--ink);
-  border-radius: 18cqw;
-  box-shadow: 0 0 0 6.5cqw #fff;
-  transform: rotate(3deg);
-}
-
-[data-frame='drawn'] .device-screen {
-  border: 2cqw solid var(--ink);
-  border-radius: 12cqw;
-}
-
-[data-frame='drawn'] .island {
-  top: 3.2cqw;
-  width: 26cqw;
-  height: 5.6cqw;
-}
-
-/* ---------- B. iphone: thin bezel, Dynamic Island, metal edge, no rotation ---------- */
-
-[data-frame='iphone'] .device-body {
-  padding: 3.2cqw;
-  background: #08080a;
-  border-radius: 17.5cqw;
-  box-shadow: inset 0 0 0 0.45cqw #2c2c30;
-  filter: drop-shadow(0 2.5cqw 4cqw rgba(5, 6, 15, 0.3));
-}
-
-/* brushed-metal band around the bezel */
-[data-frame='iphone'] .device-body::before {
-  content: '';
-  position: absolute;
-  inset: -1.1cqw;
-  z-index: -1;
-  border-radius: 18.6cqw;
-  background: linear-gradient(135deg, #e6e1d7 0%, #99948a 22%, #dcd7cd 48%, #858076 74%, #d3cdc2 100%);
-  box-shadow: 0 0 0 0.25cqw rgba(5, 6, 15, 0.35);
-}
-
-[data-frame='iphone'] .device-screen {
-  border-radius: 14.3cqw;
-}
-
-[data-frame='iphone'] .island {
-  top: 2.9cqw;
-  width: 30cqw;
-  height: 8.6cqw;
-  background: #000;
-}
-
-[data-frame='iphone'] .device-btn {
-  display: block;
-  position: absolute;
-  z-index: -2;
-  width: 1.2cqw;
-  background: linear-gradient(90deg, #8d887e, #d6d1c7 50%, #8d887e);
-  border-radius: 0.6cqw;
-}
-
-[data-frame='iphone'] .btn-action {
-  left: -1.9cqw;
-  top: 32cqw;
-  height: 8cqw;
-}
-
-[data-frame='iphone'] .btn-up {
-  left: -1.9cqw;
-  top: 46cqw;
-  height: 15cqw;
-}
-
-[data-frame='iphone'] .btn-down {
-  left: -1.9cqw;
-  top: 65cqw;
-  height: 15cqw;
-}
-
-[data-frame='iphone'] .btn-power {
-  right: -1.9cqw;
-  top: 54cqw;
-  height: 24cqw;
 }
 
 /* ---------- one halo thickness for the phones and the photos ----------
@@ -154,43 +69,13 @@
   }
 }
 
-/* ---------- B: a plain sticker phone, the same component in both sections ----------
-   just the screen, a solid black bezel, a black pill, and the white halo */
-
-[data-frame='iphone'] .device-simple .device-body {
-  padding: 0;
-  background: none;
-  border-radius: 0;
-  box-shadow: none;
-  filter: none;
-  transform: rotate(1.5deg);
-}
-
-[data-frame='iphone'] .device-simple .device-body::before,
-[data-frame='iphone'] .device-simple .device-btn {
-  display: none;
-}
-
 /* shows through only if the clip is slow to load: match each screen's own colour */
-[data-frame='iphone'] #world .device-screen {
+#world .device-screen {
   background: var(--lilac);
 }
 
 #answer .device-screen {
   background: var(--mint);
-}
-
-[data-frame='iphone'] .device-simple .device-screen {
-  border: 2.2cqw solid var(--ink);
-  border-radius: 15cqw;
-  box-shadow: 0 0 0 var(--halo) #fff;
-}
-
-[data-frame='iphone'] .device-simple .island {
-  top: 2.6cqw;
-  width: 28cqw;
-  height: 7.4cqw;
-  background: var(--ink);
 }
 
 /* ---------- real photos in the sticker frame (sizes in cqw of the stage) ---------- */
@@ -228,22 +113,6 @@
   background: #e6e9f0;
   border: 0.9cqw solid var(--ink);
   border-radius: 1.2cqw;
-}
-
-/* ---------- tester toggle ---------- */
-
-.frame-toggle {
-  position: fixed;
-  left: 12px;
-  bottom: 12px;
-  z-index: 20;
-  padding: 7px 11px;
-  font: 12px/1 system-ui, sans-serif;
-  color: #fff;
-  background: rgba(5, 6, 15, 0.82);
-  border: 0;
-  border-radius: 4px;
-  cursor: pointer;
 }
 
 /* ---------- copy changes for this page ---------- */

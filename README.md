@@ -50,8 +50,6 @@ assets/      the source sticker SVGs; script.js carries inline copies of them
 fonts/       Dharma Gothic E Heavy (big titles), Bebas Neue (scene lines), Anton (tags, buttons), Nority-Demo (wordmark)
 ```
 
-A small "frame: drawn / iphone" tester toggle sits in the bottom-left corner of the page; remove the `.frame-toggle` button from `index.html` before going live.
-
 ## Notes
 
 - Stickers are placed inside a `.stage` with `--x`, `--y` (position) and `--w` (width) in percent, and `--r` for rotation.

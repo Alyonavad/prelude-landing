@@ -8,11 +8,7 @@
     <link rel="preload" href="fonts/Anton-Regular.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="stylesheet" href="styles.css" />
     <!-- compare: bump ?v= on these two files whenever they change, so a browser never pairs a new one with a cached old one -->
-    <link rel="stylesheet" href="compare/compare.css?v=26" />
-    <script>
-      // compare: the realistic frame is the default; ?frame=drawn opens on the drawn one
-      document.documentElement.dataset.frame = new URLSearchParams(location.search).get('frame') === 'drawn' ? 'drawn' : 'iphone';
-    </script>
+    <link rel="stylesheet" href="compare/compare.css?v=27" />
   </head>
   <body>
     <a class="pill pill-white waitlist-link" href="#cta">Join the waitlist</a>
@@ -102,10 +98,9 @@
       <section class="scene split" id="answer">
         <p class="statement rise">Answer in your own time</p>
         <div class="stage" aria-hidden="true">
-          <!-- compare: phone frame (drawn / iphone) around the prototype's "your flower" screen -->
-          <div class="st device device-simple" style="--x: 43%; --y: 1%; --w: 38%">
+          <!-- compare: phone frame around the prototype's "your flower" screen -->
+          <div class="st device" style="--x: 43%; --y: 1%; --w: 38%">
             <div class="device-body">
-              <span class="device-btn btn-action"></span><span class="device-btn btn-up"></span><span class="device-btn btn-down"></span><span class="device-btn btn-power"></span>
               <div class="device-screen">
                 <iframe src="compare/prototype.html?screen=mirror&amp;loop=7000&amp;bg=mint" title="Prelude prototype: your flower" tabindex="-1" scrolling="no"></iframe>
                 <span class="island"></span>
@@ -161,10 +156,9 @@
       <section class="scene split" id="world">
         <p class="statement rise">Show your world before your face</p>
         <div class="stage" aria-hidden="true">
-          <!-- compare: phone frame (drawn / iphone) around a prelude conversation with world photos; the other person is shown as "Alex" (&name=alex) -->
-          <div class="st device device-simple" style="--x: 31%; --y: 1%; --w: 38%">
+          <!-- compare: phone frame around a prelude conversation with world photos; the other person is shown as "Alex" (&name=alex) -->
+          <div class="st device" style="--x: 31%; --y: 1%; --w: 38%">
             <div class="device-body">
-              <span class="device-btn btn-action"></span><span class="device-btn btn-up"></span><span class="device-btn btn-down"></span><span class="device-btn btn-power"></span>
               <div class="device-screen">
                 <iframe src="compare/prototype.html?screen=world&amp;loop=8000&amp;photos=real&amp;name=alex" title="Prelude prototype: a prelude with world photos" tabindex="-1" scrolling="no"></iframe>
                 <span class="island"></span>
@@ -288,9 +282,7 @@
       </nav>
     </footer>
 
-    <button class="frame-toggle" type="button">frame: iphone</button>
-
     <script src="script.js"></script>
-    <script src="compare/compare.js?v=26"></script>
+    <script src="compare/compare.js?v=27"></script>
   </body>
 </html>

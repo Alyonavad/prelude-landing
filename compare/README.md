@@ -1,8 +1,6 @@
 # The `compare` layer
 
-`../index.html` is the landing page. It loads `../styles.css` and `../script.js` (the base sticker page) and then `compare.css` and `compare.js` from this folder, which hold everything added since: the phone frames with the embedded prototype, real photos, the type changes, the typing and waitlist animations. The folder is called `compare` because this page started life as `landing-compare.html`, a side-by-side test of two phone frames; it has since replaced the old index.
-
-- **Toggle:** "frame: drawn / iphone" in the bottom-left corner. The realistic frame is the default; `?frame=drawn` opens on the drawn one. In "show your world" the iphone state is a plain sticker phone (screen, black bezel, black pill, white halo); in "answer in your own time" it is a realistic iPhone drawn in CSS.
+`../index.html` is the landing page. It loads `../styles.css` and `../script.js` (the base sticker page) and then `compare.css` and `compare.js` from this folder, which hold everything added since: the phone frames with the embedded prototype, real photos, the type changes, the typing and waitlist animations. The folder is called `compare` because this page started life as `landing-compare.html`, a side-by-side test of two phone frames; it has since replaced the old index, and the test toggle is gone.
 
 ## Waitlist form
 
@@ -15,8 +13,8 @@ Three files in `photos/`: `window.jpg`, `plants.jpg`, `room.jpg` (any shape; the
 ## Files
 
 ```
-compare.css      phone frames (drawn, iphone), real-photo stickers, toggle
-compare.js       toggle, and scaling the 390x844 prototype to the frame
+compare.css      the sticker phone, real-photo stickers, type and animation styles
+compare.js       scaling the 390x844 prototype to the phone, typing, waitlist form, photo fan-out
 prototype.html   built copy of the prototype with the embed parameters below
 prototype-src/   source of that copy (from ../../prelude/v3)
 photos/          the three world photos

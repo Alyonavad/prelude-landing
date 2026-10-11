@@ -1,24 +1,5 @@
-// The landing page's second script (index.html loads it after script.js): frame toggle, prototype
-// clips, typing, waitlist form states and the photo fan-out.
-
-const html = document.documentElement;
-const frameToggle = document.querySelector('.frame-toggle');
-
-function renderFrameToggle() {
-  frameToggle.textContent = `frame: ${html.dataset.frame}`;
-}
-
-frameToggle.addEventListener('click', () => {
-  html.dataset.frame = html.dataset.frame === 'drawn' ? 'iphone' : 'drawn';
-
-  const url = new URL(location.href);
-  if (html.dataset.frame === 'drawn') url.searchParams.set('frame', 'drawn');
-  else url.searchParams.delete('frame');
-  history.replaceState(null, '', url);
-  renderFrameToggle();
-});
-
-renderFrameToggle();
+// The landing page's second script (index.html loads it after script.js): prototype clips,
+// typing, waitlist form states and the photo fan-out.
 
 // The prototype always renders at 390x844; scale it to whatever size the screen is drawn at.
 const fit = new ResizeObserver((entries) => {
