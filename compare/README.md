@@ -1,10 +1,10 @@
 # The `compare` layer
 
-`../index.html` is the landing page. It loads `../styles.css` and `../script.js` (the base sticker page) and then `compare.css` and `compare.js` from this folder, which hold everything added since: the phone frames with the embedded prototype, real photos, the type changes, the typing and waitlist animations. The folder is called `compare` because this page started life as `landing-compare.html`, a side-by-side test of two phone frames; it has since replaced the old index, and the test toggle is gone.
+`../index.html` is the landing page. It loads `../styles.css` and `../script.js` (the base sticker page) and then `compare.css` and `compare.js` from this folder, which hold everything added since: the phone frames with the embedded prototype, real photos, the type changes, the typing animation and the waitlist form's error note. The folder is called `compare` because this page started life as `landing-compare.html`, a side-by-side test of two phone frames; it has since replaced the old index, and the test toggle is gone.
 
 ## Waitlist form
 
-The form in "start quietly" has sending, done and error states (in `compare.js` and `compare.css`). There is no backend: `joinWaitlist()` in `compare.js` simulates a 1.5s request and is the one place to plug a real endpoint in. Open the page with `?send=fail` to see the failed-request state.
+There is no backend. A valid email swaps the form for a thank-you line (the handler in `../script.js`); an invalid one shows a note with a small sad flower under the input (`compare.js`). Nothing is sent or stored.
 
 ## Photos
 
@@ -14,7 +14,7 @@ Three files in `photos/`: `window.jpg`, `plants.jpg`, `room.jpg` (any shape; the
 
 ```
 compare.css      the sticker phone, real-photo stickers, type and animation styles
-compare.js       scaling the 390x844 prototype to the phone, typing, waitlist form, photo fan-out
+compare.js       scaling the 390x844 prototype to the phone, typing, waitlist error note, photo fan-out
 prototype.html   built copy of the prototype with the embed parameters below
 prototype-src/   source of that copy (from ../../prelude/v3)
 photos/          the three world photos

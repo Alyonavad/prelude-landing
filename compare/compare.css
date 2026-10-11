@@ -460,46 +460,107 @@
   }
 }
 
-/* ---------- waitlist form: sending, done and error states (built by compare.js) ---------- */
+/* ---------- waitlist form ---------- */
 
-/* one fixed footprint for every state: the form on top, room for a note under it */
+/* a wider column for the form on desktop, so the pill can grow */
+@media (min-width: 801px) {
+  #cta {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  }
+}
+
+/* the slot keeps a strip under the form free for the error note, so showing it moves nothing */
 .waitlist-slot {
   position: relative;
   width: 100%;
-  max-width: 560px;
-  min-height: 124px;
+  max-width: 730px;
+  padding-bottom: 54px; /* 8px gap + the 46px flower */
 }
 
-.waitlist-slot[data-state='sending'] .waitlist,
-.waitlist-slot[data-state='done'] .waitlist {
-  display: none;
+.waitlist {
+  max-width: none; /* the slot sets the width; the input takes everything left of the button */
 }
 
-/* short messages in the section-line font, small */
-.send-copy {
-  font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
-  font-size: clamp(19px, 1.6vw, 24px);
-  line-height: 0.95;
-  text-transform: uppercase;
+.waitlist .pill {
+  flex: none;
 }
 
-/* --- error: a sad little flower under the input, leaning towards it --- */
+/* no focus ring on the pill for mouse and touch; keyboard users get a thin dashed outline
+   (html[data-keyboard] is set by compare.js while the Tab key is in use) */
+.waitlist:focus-within {
+  box-shadow: none;
+}
 
-.send-note {
+.waitlist input,
+.waitlist .pill:focus-visible {
+  outline: none;
+}
+
+[data-keyboard] .waitlist:focus-within {
+  outline: 2px dashed var(--ink);
+  outline-offset: 4px;
+}
+
+/* browser autofill: keep the input white with black text in every state */
+.waitlist input:-webkit-autofill,
+.waitlist input:-webkit-autofill:hover,
+.waitlist input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset;
+  -webkit-text-fill-color: #05060f;
+  caret-color: #05060f;
+  transition: background-color 9999s;
+}
+
+/* the input's own corners follow the pill, so the autofill fill never squares them off */
+.waitlist input {
+  border-radius: 999px;
+}
+
+/* small screens: the button drops under the input, so the email is never squeezed */
+@media (max-width: 560px) {
+  .waitlist {
+    flex-direction: column;
+    align-items: stretch;
+    border-radius: 30px;
+  }
+
+  .waitlist input {
+    padding: 0.75em 1em;
+  }
+
+  .waitlist .pill {
+    text-align: center;
+  }
+}
+
+/* --- error: a sad little flower beside the message, under the input --- */
+
+.waitlist-note {
+  position: absolute;
+  left: 14px;
+  right: 0;
+  bottom: 0;
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 8px;
-  padding-left: 14px;
 }
 
-.send-note[hidden],
-.send-panel[hidden] {
+.waitlist-note[hidden] {
   display: none;
 }
 
-/* (#cta in these selectors outranks the scroll-driven state of the section's big flower) */
-#cta .send-sad {
+/* Bebas capitals sit above the middle of their line box; the top padding moves the middle of
+   the letters onto the row's centre line, where the flower's centre is */
+.waitlist-note p {
+  padding-top: 0.21em;
+  font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
+  font-size: clamp(19px, 1.6vw, 24px);
+  line-height: 0.92;
+  text-transform: uppercase;
+}
+
+/* (#cta outranks the scroll-driven state of the section's big flower) */
+#cta .sad-flower {
   --fold: 0.5; /* petals pulled in, flat mouth, eyes closed */
   --eyes: 0;
   flex: none;
@@ -508,152 +569,8 @@
 }
 
 /* the face shifts up and across, towards the input above */
-.send-sad .f-features {
+.sad-flower .f-features {
   transform: translate(3px, -6px);
-}
-
-/* --- sending and done --- */
-
-.send-panel {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.send-scene {
-  position: relative;
-  flex: none;
-  width: 132px;
-  height: 124px;
-}
-
-.send-bubble {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 64px;
-}
-
-/* what the bubble is showing: centred on the bubble's body */
-.send-item {
-  position: absolute;
-  left: 50%;
-  top: 41.7%;
-  width: 30px;
-  margin: -15px 0 0 -15px;
-  display: grid;
-  place-items: center;
-  animation: send-pop 320ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
-}
-
-.send-item span {
-  font-size: 17px;
-  line-height: 1;
-}
-
-@keyframes send-pop {
-  from {
-    opacity: 0;
-    transform: scale(0.4);
-  }
-}
-
-#cta .send-flower {
-  --fold: 0;
-  --eyes: 0; /* eyes closed while sending */
-  position: absolute;
-  left: 40px;
-  top: 40px;
-  width: 84px;
-}
-
-.send-flower .f-open,
-.send-flower .f-closed {
-  transition: opacity 350ms ease, transform 350ms ease;
-}
-
-.send-held {
-  position: absolute;
-  left: 98px;
-  top: 86px;
-  width: 32px;
-  transform: rotate(12deg);
-}
-
-.send-text {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-}
-
-.send-progress {
-  width: min(220px, 100%);
-}
-
-/* fills over the sending time; --send-ms is set by compare.js */
-.send-progress .fill {
-  transform-box: fill-box;
-  transform-origin: left center;
-  animation: send-fill var(--send-ms, 2500ms) linear both;
-}
-
-@keyframes send-fill {
-  from {
-    transform: scaleX(0);
-  }
-}
-
-/* done: the envelope leaves the bubble in a small arc, the flower wakes and bounces once */
-.waitlist-slot[data-state='done'] .send-progress,
-.waitlist-slot[data-state='done'] .send-held {
-  display: none;
-}
-
-#cta .waitlist-slot[data-state='done'] .send-flower {
-  --eyes: 1;
-  animation: send-bounce 520ms cubic-bezier(0.34, 1.4, 0.64, 1) 250ms both;
-}
-
-@keyframes send-bounce {
-  40% {
-    transform: translateY(-9px);
-  }
-}
-
-.send-item.fly {
-  animation: send-fly 1100ms cubic-bezier(0.3, 0, 0.5, 1) 200ms both;
-}
-
-@keyframes send-fly {
-  0% {
-    opacity: 1;
-    transform: none;
-  }
-  45% {
-    opacity: 1;
-    transform: translate(16px, -30px) rotate(10deg);
-  }
-  100% {
-    opacity: 0;
-    transform: translate(52px, -52px) rotate(24deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .send-item,
-  .send-item.fly,
-  .send-progress .fill,
-  #cta .waitlist-slot[data-state='done'] .send-flower {
-    animation: none;
-  }
-
-  /* the envelope has already gone */
-  .send-item.fly {
-    opacity: 0;
-  }
 }
 
 /* ---------- "show your world": photos fan out from the small photo in the phone ----------

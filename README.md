@@ -5,7 +5,7 @@ The Prelude landing page: a scroll story told by a flower sticker, ending in a w
 - Plain HTML, CSS and JS. No build step, no dependencies, no backend.
 - Nine scenes, each about one viewport tall, plus a footer FAQ.
 - Illustration is inline SVG, plus three photos in `compare/photos/`; fonts load from `fonts/`. Nothing is fetched from another site.
-- The waitlist form has no backend: the request is simulated in `joinWaitlist()` in `compare/compare.js`. Nothing is sent or stored.
+- The waitlist form has no backend: a valid email is replaced with a thank-you line. Nothing is sent or stored.
 
 ## Run locally
 

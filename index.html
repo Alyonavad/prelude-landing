@@ -8,7 +8,7 @@
     <link rel="preload" href="fonts/Anton-Regular.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="stylesheet" href="styles.css" />
     <!-- compare: bump ?v= on these two files whenever they change, so a browser never pairs a new one with a cached old one -->
-    <link rel="stylesheet" href="compare/compare.css?v=27" />
+    <link rel="stylesheet" href="compare/compare.css?v=29" />
   </head>
   <body>
     <a class="pill pill-white waitlist-link" href="#cta">Join the waitlist</a>
@@ -221,16 +221,17 @@
       <section class="scene split" id="cta">
         <div class="copy">
           <h2 class="display rise">START<br />QUIETLY.</h2>
-          <!-- compare: the slot keeps one fixed size through every state (form, sending, done, error),
-               so nothing on the page moves. compare.js fills in the sending panel and the note. -->
-          <div class="waitlist-slot rise" style="--at: 0.22" data-state="idle">
+          <!-- compare: the slot keeps a strip under the form free for the error note, so showing it moves nothing -->
+          <div class="waitlist-slot rise" style="--at: 0.22">
             <form class="waitlist" novalidate>
               <label class="sr-only" for="email-cta">Email</label>
               <input id="email-cta" type="email" name="email" placeholder="Your email" autocomplete="email" required />
               <button class="pill pill-black" type="submit">Join the waitlist</button>
             </form>
-            <div class="send-note" role="alert" hidden><div class="flower send-sad"></div><p class="send-copy"></p></div>
-            <div class="send-panel" role="status" hidden></div>
+            <div class="waitlist-note" role="alert" hidden>
+              <div class="flower sad-flower" aria-hidden="true"></div>
+              <p>Hmm, that email doesn't look right.</p>
+            </div>
           </div>
         </div>
         <div class="stage" aria-hidden="true">
@@ -283,6 +284,6 @@
     </footer>
 
     <script src="script.js"></script>
-    <script src="compare/compare.js?v=27"></script>
+    <script src="compare/compare.js?v=29"></script>
   </body>
 </html>

@@ -1,5 +1,5 @@
 // The landing page's second script (index.html loads it after script.js): prototype clips,
-// typing, waitlist form states and the photo fan-out.
+// typing, the waitlist form's error note and the photo fan-out.
 
 // The prototype always renders at 390x844; scale it to whatever size the screen is drawn at.
 const fit = new ResizeObserver((entries) => {
@@ -106,156 +106,42 @@ if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('Intersec
   ).observe(typedSticker);
 }
 
-// ---------- Waitlist form: sending, done and error states ----------
-// There is no backend yet. joinWaitlist() is the one place to plug a real endpoint in.
+// ---------- Waitlist form ----------
+// A valid email is left to the submit handler in script.js, which swaps the form for the
+// thank-you line. An invalid one shows the note with the sad flower under the input instead.
 
-const SEND_MIN_MS = 2500; // the sending state always lasts at least this long
-const SEND_COPY = {
-  sending: 'sending quietly…',
-  done: "you're on the list. we'll write when it's your turn.",
-  invalid: "hmm, that email doesn't look right.",
-  failed: "couldn't send. try again?",
-};
-
-// Simulated request: resolves after ~1.5s. Open the page with ?send=fail to see the failure state.
-// To go live, replace the body with something like:
-//   const response = await fetch('/api/waitlist', { method: 'POST', body: JSON.stringify({ email }) });
-//   if (!response.ok) throw new Error('request failed');
-async function joinWaitlist(email) {
-  await wait(1500);
-  if (new URLSearchParams(location.search).get('send') === 'fail') throw new Error('simulated failure');
-  return { email };
-}
-
-const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const skipMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const INK_C = '#05060f';
-const ENVELOPE = `
-<svg viewBox="-4 -4 48 38">
-  <rect x="0" y="0" width="40" height="30" rx="4" fill="#fff" stroke="#fff" stroke-width="7" stroke-linejoin="round" />
-  <rect x="0" y="0" width="40" height="30" rx="4" fill="#fff" stroke="${INK_C}" stroke-width="2.2" />
-  <path d="M1.5 3 L20 17 L38.5 3" fill="none" stroke="${INK_C}" stroke-width="2.2" stroke-linejoin="round" />
-</svg>`;
-
-// the little things the bubble flicks through while sending
-const SEND_ITEMS = [
-  // a mini voice note
-  `<svg viewBox="0 0 40 40">
-    <rect x="3" y="11" width="34" height="18" rx="6" fill="#d9b8f2" stroke="${INK_C}" stroke-width="2.2" />
-    <circle cx="11" cy="20" r="3.6" fill="${INK_C}" />
-    <g fill="${INK_C}"><rect x="17" y="17" width="2.4" height="6" rx="1.2" /><rect x="21.4" y="14.5" width="2.4" height="11" rx="1.2" /><rect x="25.8" y="16" width="2.4" height="8" rx="1.2" /><rect x="30.2" y="18" width="2.4" height="4" rx="1.2" /></g>
-  </svg>`,
-  // a mini plant photo
-  `<svg viewBox="0 0 40 40">
-    <rect x="6" y="6" width="28" height="28" rx="4" fill="#f4d35e" stroke="${INK_C}" stroke-width="2.2" />
-    <g stroke="${INK_C}" stroke-width="1.8" stroke-linejoin="round">
-      <ellipse cx="20" cy="16" rx="3" ry="6.5" fill="#a8e3b5" />
-      <ellipse cx="14.5" cy="18.5" rx="2.6" ry="5.6" fill="#a8e3b5" transform="rotate(-32 14.5 18.5)" />
-      <ellipse cx="25.5" cy="18.5" rx="2.6" ry="5.6" fill="#a8e3b5" transform="rotate(32 25.5 18.5)" />
-      <path d="M14.5 23 H25.5 L24 30 H16Z" fill="#f4a6b8" />
-    </g>
-  </svg>`,
-  // a coffee cup
-  `<svg viewBox="0 0 40 40">
-    <g fill="none" stroke="${INK_C}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M15 6 q-2.5 3 0 6 M22 6 q-2.5 3 0 6" />
-      <path d="M28 19 h3 a4 4 0 0 1 0 8 h-3.6" />
-      <path d="M8 17 H29 V24 a8 8 0 0 1 -8 8 H16 a8 8 0 0 1 -8 -8Z" fill="#a8e3b5" />
-      <path d="M6 36 H31" />
-    </g>
-  </svg>`,
-  // a "yes"
-  '<span>yes</span>',
-];
-
 document.querySelectorAll('.waitlist-slot').forEach((slot) => {
-  const form = slot.querySelector('.waitlist');
-  const input = form.querySelector('input[type="email"]');
-  const note = slot.querySelector('.send-note');
-  const panel = slot.querySelector('.send-panel');
+  const input = slot.querySelector('input[type="email"]');
+  const note = slot.querySelector('.waitlist-note');
 
-  note.querySelector('.flower').innerHTML = FLOWER; // FLOWER and bubble() are the sticker templates in script.js
+  note.querySelector('.flower').innerHTML = FLOWER; // the sticker template in script.js
 
-  const showNote = (kind) => {
-    slot.dataset.state = 'error';
-    note.querySelector('.send-copy').textContent = SEND_COPY[kind];
-    note.hidden = false;
-    panel.hidden = true;
-  };
+  input.addEventListener('input', () => (note.hidden = true));
 
-  const clearNote = () => {
-    if (slot.dataset.state !== 'error') return;
-    slot.dataset.state = 'idle';
-    note.hidden = true;
-  };
-
-  // one item in the bubble at a time; a fresh element each time restarts the pop
-  const setItem = (scene, html, className = '') => {
-    scene.querySelector('.send-item')?.remove();
-    scene.querySelector('.send-bubble').insertAdjacentHTML('beforeend', `<div class="send-item ${className}">${html}</div>`);
-  };
-
-  async function send() {
-    panel.innerHTML = `
-      <div class="send-scene" aria-hidden="true">
-        <div class="send-bubble">${bubble('')}</div>
-        <div class="flower send-flower">${FLOWER}</div>
-        <div class="send-held">${ENVELOPE}</div>
-      </div>
-      <div class="send-text">
-        <p class="send-copy">${SEND_COPY.sending}</p>
-        <svg class="send-progress" viewBox="0 0 220 12" aria-hidden="true">
-          <clipPath id="send-clip"><rect x="2" y="2" width="216" height="8" rx="4" /></clipPath>
-          <rect x="2" y="2" width="216" height="8" rx="4" fill="#fff" />
-          <rect class="fill" x="2" y="2" width="216" height="8" fill="#f4d35e" clip-path="url(#send-clip)" />
-          <rect x="2" y="2" width="216" height="8" rx="4" fill="none" stroke="${INK_C}" stroke-width="2" />
-        </svg>
-      </div>`;
-    const scene = panel.querySelector('.send-scene');
-    panel.style.setProperty('--send-ms', `${SEND_MIN_MS}ms`);
-    slot.dataset.state = 'sending';
-    note.hidden = true;
-    panel.hidden = false;
-
-    let step = 0;
-    setItem(scene, SEND_ITEMS[0]);
-    const cycle = setInterval(() => setItem(scene, SEND_ITEMS[++step % SEND_ITEMS.length]), 600);
-
-    try {
-      // reduced motion: no waiting on the animation, just the request itself
-      await Promise.all([joinWaitlist(input.value.trim()), skipMotion ? null : wait(SEND_MIN_MS)]);
-      clearInterval(cycle);
-      slot.dataset.state = 'done';
-      panel.querySelector('.send-copy').textContent = SEND_COPY.done;
-      setItem(scene, ENVELOPE, 'fly'); // the envelope appears in the bubble, then flies out
-    } catch (error) {
-      clearInterval(cycle);
-      showNote('failed'); // back to the form, still filled in
-    }
-  }
-
-  input.addEventListener('input', clearNote);
-
-  // Capture phase on the slot: this runs before, and replaces, the landing page's own submit
-  // handler in script.js (which swaps the form for a plain thank-you line).
+  // Capture phase, so this runs before script.js's handler on the form itself.
   slot.addEventListener(
     'submit',
     (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      if (slot.dataset.state === 'sending') return;
-
-      if (!input.value.trim() || !input.checkValidity()) {
-        showNote('invalid');
-        input.focus();
+      if (input.value.trim() && input.checkValidity()) {
+        note.hidden = true;
         return;
       }
-      send();
+      event.preventDefault();
+      event.stopPropagation();
+      note.hidden = false;
+      input.focus();
     },
     true
   );
 });
+
+// Keyboard focus only: the form's dashed outline shows while Tab is in use, not after a click.
+addEventListener('keydown', (event) => {
+  if (event.key === 'Tab') document.documentElement.dataset.keyboard = '';
+});
+addEventListener('pointerdown', () => delete document.documentElement.dataset.keyboard);
 
 // ---------- "Show your world": the three photos fan out of the small photo in the phone ----------
 // Start: stacked, tiny and unrotated, exactly over the photo in Alex's message. In view: each one
