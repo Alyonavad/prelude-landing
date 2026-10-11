@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Prelude · a quiet way to find your people</title>
+    <meta name="description" content="Prelude: no small talk, no show. A quiet way to find your people." />
+    <link rel="preload" href="fonts/Anton-Regular.ttf" as="font" type="font/ttf" crossorigin />
+    <link rel="stylesheet" href="styles.css" />
+    <!-- compare: bump ?v= on these two files whenever they change, so a browser never pairs a new one with a cached old one -->
+    <link rel="stylesheet" href="compare/compare.css?v=26" />
+    <script>
+      // compare: the realistic frame is the default; ?frame=drawn opens on the drawn one
+      document.documentElement.dataset.frame = new URLSearchParams(location.search).get('frame') === 'drawn' ? 'drawn' : 'iphone';
+    </script>
+  </head>
+  <body>
+    <a class="pill pill-white waitlist-link" href="#cta">Join the waitlist</a>
+
+    <main>
+      <!-- 1. HERO -->
+      <section class="scene hero" id="hero">
+        <a class="wordmark" href="#hero">PRELUDE</a>
+
+        <h1 class="display hero-title">NO SMALL<br />TALK.<br />NO SHOW.</h1>
+
+        <div class="stage" aria-hidden="true">
+          <div class="st" style="--x: 19%; --y: 5%; --w: 60%">
+            <!-- compare: the sway has its own element, separate from the bloom on the flower -->
+            <div class="sway"><div class="flower" data-flower></div></div>
+          </div>
+          <span class="st tag lilac" style="--x: 8%; --y: 6%; --r: -5deg">no profiles</span>
+          <span class="st tag pink" style="--x: 64%; --y: 1%; --r: 6deg">in your own time</span>
+          <span class="st tag butter" style="--x: 62%; --y: 65%; --r: 4deg">only a mutual yes</span>
+          <span class="st tag mint" style="--x: 17%; --y: 84%; --r: -5deg">side by side</span>
+          <div class="st" data-bubble data-typing style="--x: 8%; --y: 56%; --w: 16%"></div>
+          <div class="st" data-pixel style="--x: 0%; --y: 71%; --w: 13%"></div>
+          <div class="st" data-moon style="--x: 84%; --y: 84%; --w: 12%"></div>
+        </div>
+
+        <div class="hero-cta">
+          <p class="statement">A quiet way to find your people</p>
+        </div>
+      </section>
+
+      <!-- 2. THE CROWD -->
+      <section class="scene split drains" id="crowd">
+        <p class="statement rise">Every way to meet people asks you to perform first</p>
+        <div class="stage" aria-hidden="true">
+          <div class="st flower" data-flower style="--x: 29%; --y: 26%; --w: 42%"></div>
+          <span class="st tag loud pink pop" style="--x: 3%; --y: 13%; --r: -7deg; --dx: -30cqw; --dy: -20cqw; --at: 0.14">so, what do you do?</span>
+          <span class="st tag loud butter pop" style="--x: 52%; --y: 9%; --r: 6deg; --dx: 30cqw; --dy: -25cqw; --at: 0.18">sell yourself</span>
+          <div class="st pop" data-bubble="?!" style="--x: 20%; --y: 24%; --w: 19%; --r: -6deg; --dx: -20cqw; --dy: -25cqw; --at: 0.2"></div>
+          <span class="st tag loud mint pop" style="--x: 66%; --y: 30%; --r: -9deg; --dx: 35cqw; --dy: 0cqw; --at: 0.22">be fun!</span>
+          <span class="st tag loud lilac pop" style="--x: 44%; --y: 70%; --r: 5deg; --dx: 30cqw; --dy: 25cqw; --at: 0.26">swipe swipe swipe</span>
+          <div class="st pop" data-bubble="..." style="--x: 63%; --y: 48%; --w: 21%; --r: 8deg; --dx: 30cqw; --dy: 10cqw; --at: 0.28"></div>
+          <span class="st tag loud butter pop" style="--x: 4%; --y: 66%; --r: -4deg; --dx: -30cqw; --dy: 25cqw; --at: 0.3">tell us a fun fact</span>
+          <div class="st pop" data-bubble="hey!!" style="--x: 40%; --y: 2%; --w: 18%; --r: 4deg; --dx: 0cqw; --dy: -30cqw; --at: 0.32"></div>
+          <span class="st tag loud pink pop" style="--x: 0%; --y: 42%; --r: 8deg; --dx: -35cqw; --dy: 0cqw; --at: 0.34">smile more</span>
+          <span class="st tag loud mint pop" style="--x: 30%; --y: 84%; --r: -3deg; --dx: 0cqw; --dy: 30cqw; --at: 0.36">mingle!</span>
+        </div>
+      </section>
+
+      <!-- 3. THE RETREAT -->
+      <section class="scene solo drains" id="retreat">
+        <div class="stage stage-small" aria-hidden="true">
+          <div class="st flower" data-flower style="--x: 5%; --y: 5%; --w: 90%"></div>
+        </div>
+        <p class="statement rise" style="--at: 0.3">So you stop trying</p>
+      </section>
+
+      <!-- 4. THE TURN -->
+      <section class="scene turn drains" id="turn">
+        <!-- compare: setup line in the shared Bebas style; punchline in the big-title style (.display, Dharma Gothic E) -->
+        <h2 class="turn-head">
+          <span class="statement rise" style="--at: 0.18">What if the first meeting felt</span>
+          <span class="display turn-punch rise" style="--at: 0.3">LIKE THE FIFTH?</span>
+        </h2>
+        <!-- compare: the flower peeks in from the right edge. Its parts are styled from the
+             scene's scroll progress in compare.css (.peek-flower): grey and shy first, then
+             it leans in, colours up, opens its eyes and smiles. -->
+        <div class="peek-flower" aria-hidden="true">
+          <svg viewBox="-114 -114 228 228">
+            <g fill="#fff" stroke="#fff" stroke-width="22" stroke-linejoin="round"><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(0)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(45)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(90)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(135)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(180)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(225)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(270)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(315)" /><circle r="40" /></g>
+            <g class="pf-petals" stroke="#05060f" stroke-width="3"><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(0)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(45)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(90)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(135)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(180)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(225)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(270)" /><ellipse cx="0" cy="-50" rx="25" ry="40" transform="rotate(315)" /></g>
+            <circle class="pf-centre" r="40" stroke="#05060f" stroke-width="3" />
+            <g class="pf-cheeks"><ellipse cx="-20" cy="11" rx="7" ry="4.2" /><ellipse cx="20" cy="11" rx="7" ry="4.2" /></g>
+            <g fill="none" stroke="#05060f" stroke-width="3.3" stroke-linecap="round">
+              <g class="pf-eyes-closed"><path d="M-22 -2 q6 6 12 0" /><path d="M10 -2 q6 6 12 0" /></g>
+              <path class="pf-mouth-flat" d="M-6 17 h12" />
+              <path class="pf-mouth-smile" d="M-8 14 q8 7 16 0" />
+            </g>
+            <g class="pf-eyes-open" fill="#05060f">
+              <circle cx="-16" cy="-1" r="4.6" /><circle cx="16" cy="-1" r="4.6" />
+              <circle cx="-14.4" cy="-2.6" r="1.4" fill="#fff" /><circle cx="17.6" cy="-2.6" r="1.4" fill="#fff" />
+            </g>
+          </svg>
+        </div>
+      </section>
+
+      <!-- 5. ANSWER IN YOUR OWN TIME -->
+      <section class="scene split" id="answer">
+        <p class="statement rise">Answer in your own time</p>
+        <div class="stage" aria-hidden="true">
+          <!-- compare: phone frame (drawn / iphone) around the prototype's "your flower" screen -->
+          <div class="st device device-simple" style="--x: 43%; --y: 1%; --w: 38%">
+            <div class="device-body">
+              <span class="device-btn btn-action"></span><span class="device-btn btn-up"></span><span class="device-btn btn-down"></span><span class="device-btn btn-power"></span>
+              <div class="device-screen">
+                <iframe src="compare/prototype.html?screen=mirror&amp;loop=7000&amp;bg=mint" title="Prelude prototype: your flower" tabindex="-1" scrolling="no"></iframe>
+                <span class="island"></span>
+              </div>
+            </div>
+          </div>
+          <!-- compare: voice message 1.6x wider (256 units instead of 160), same height, 25 bars -->
+          <div class="st wave" style="--x: -6%; --y: 38%; --w: 62%; --r: -5deg">
+            <svg viewBox="-8 -8 272 76">
+              <rect x="0" y="0" width="256" height="60" rx="12" fill="#fff" stroke="#fff" stroke-width="14" stroke-linejoin="round" />
+              <rect x="0" y="0" width="256" height="60" rx="12" fill="#d9b8f2" stroke="#05060f" stroke-width="2.5" />
+              <rect x="4.5" y="4.5" width="247" height="51" rx="8" fill="none" stroke="#05060f" stroke-width="1.4" stroke-dasharray="5 4" />
+              <circle cx="26" cy="30" r="12" fill="#05060f" />
+              <path d="M22 23.5 L33 30 L22 36.5Z" fill="#fff" />
+              <g fill="#05060f">
+                <rect class="bar" style="--i: 0" x="48" y="23" width="4" height="14" rx="2" />
+                <rect class="bar" style="--i: 1" x="56" y="16" width="4" height="28" rx="2" />
+                <rect class="bar" style="--i: 2" x="64" y="20" width="4" height="20" rx="2" />
+                <rect class="bar" style="--i: 3" x="72" y="12" width="4" height="36" rx="2" />
+                <rect class="bar" style="--i: 4" x="80" y="18" width="4" height="24" rx="2" />
+                <rect class="bar" style="--i: 5" x="88" y="24" width="4" height="12" rx="2" />
+                <rect class="bar" style="--i: 6" x="96" y="14" width="4" height="32" rx="2" />
+                <rect class="bar" style="--i: 7" x="104" y="19" width="4" height="22" rx="2" />
+                <rect class="bar" style="--i: 8" x="112" y="11" width="4" height="38" rx="2" />
+                <rect class="bar" style="--i: 9" x="120" y="21" width="4" height="18" rx="2" />
+                <rect class="bar" style="--i: 10" x="128" y="16" width="4" height="28" rx="2" />
+                <rect class="bar" style="--i: 11" x="136" y="24" width="4" height="12" rx="2" />
+                <rect class="bar" style="--i: 12" x="144" y="20" width="4" height="20" rx="2" />
+                <rect class="bar" style="--i: 13" x="152" y="15" width="4" height="30" rx="2" />
+                <rect class="bar" style="--i: 14" x="160" y="22" width="4" height="16" rx="2" />
+                <rect class="bar" style="--i: 15" x="168" y="13" width="4" height="34" rx="2" />
+                <rect class="bar" style="--i: 16" x="176" y="19" width="4" height="22" rx="2" />
+                <rect class="bar" style="--i: 17" x="184" y="24" width="4" height="12" rx="2" />
+                <rect class="bar" style="--i: 18" x="192" y="17" width="4" height="26" rx="2" />
+                <rect class="bar" style="--i: 19" x="200" y="12" width="4" height="36" rx="2" />
+                <rect class="bar" style="--i: 20" x="208" y="21" width="4" height="18" rx="2" />
+                <rect class="bar" style="--i: 21" x="216" y="15" width="4" height="30" rx="2" />
+                <rect class="bar" style="--i: 22" x="224" y="23" width="4" height="14" rx="2" />
+                <rect class="bar" style="--i: 23" x="232" y="18" width="4" height="24" rx="2" />
+                <rect class="bar" style="--i: 24" x="240" y="24" width="4" height="12" rx="2" />
+              </g>
+            </svg>
+          </div>
+          <div class="st typed" style="--x: 38%; --y: 67%; --r: 4deg">
+            <span class="typed-text">slow coffee. no plans.</span><span class="caret"></span>
+          </div>
+          <span class="st tag pink pop" style="--x: 79%; --y: 12%; --r: 7deg; --dx: 10cqw; --dy: -6cqw; --at: 0.22">by voice</span>
+          <span class="st tag mint pop" style="--x: 74%; --y: 87%; --r: -5deg; --dx: 10cqw; --dy: 6cqw; --at: 0.4">or writing</span>
+        </div>
+      </section>
+
+      <!-- 6. A PIECE OF YOUR WORLD -->
+      <section class="scene split" id="world">
+        <p class="statement rise">Show your world before your face</p>
+        <div class="stage" aria-hidden="true">
+          <!-- compare: phone frame (drawn / iphone) around a prelude conversation with world photos; the other person is shown as "Alex" (&name=alex) -->
+          <div class="st device device-simple" style="--x: 31%; --y: 1%; --w: 38%">
+            <div class="device-body">
+              <span class="device-btn btn-action"></span><span class="device-btn btn-up"></span><span class="device-btn btn-down"></span><span class="device-btn btn-power"></span>
+              <div class="device-screen">
+                <iframe src="compare/prototype.html?screen=world&amp;loop=8000&amp;photos=real&amp;name=alex" title="Prelude prototype: a prelude with world photos" tabindex="-1" scrolling="no"></iframe>
+                <span class="island"></span>
+              </div>
+            </div>
+          </div>
+          <!-- compare: the three photos start stacked, tiny, on the small photo in Alex's message
+               and spring out to these positions when the section comes into view (compare.js). -->
+          <!-- compare: real photos in the sticker frame. To swap them, replace
+               compare/photos/window.jpg, plants.jpg and room.jpg (any shape; they are cropped to a square).
+               The prototype screens in this page read the same three files. -->
+          <div class="st photo-sticker fan" data-label="photo: window view" style="--x: -4%; --y: 5%; --w: 36%; --r: -6deg">
+            <img src="compare/photos/window.jpg" alt="" onerror="this.parentNode.classList.add('missing')" />
+          </div>
+          <div class="st photo-sticker fan" data-label="photo: plant on a sill" style="--x: 69%; --y: 20%; --w: 33%; --r: 7deg">
+            <img src="compare/photos/plants.jpg" alt="" onerror="this.parentNode.classList.add('missing')" />
+          </div>
+          <div class="st photo-sticker fan" data-label="photo: corner of a room" style="--x: -3%; --y: 53%; --w: 33%; --r: -3deg">
+            <img src="compare/photos/room.jpg" alt="" onerror="this.parentNode.classList.add('missing')" />
+          </div>
+          <span class="st tag butter pop" style="--x: 60%; --y: 80%; --r: 5deg; --dx: 12cqw; --dy: 8cqw; --at: 0.36">no faces needed</span>
+        </div>
+      </section>
+
+      <!-- 7. NOTHING IS ONE-SIDED -->
+      <section class="scene split" id="mutual">
+        <div class="copy">
+          <h2 class="display rise">NOTHING IS<br />ONE-SIDED.</h2>
+          <p class="statement rise" style="--at: 0.22">Every step opens only when you both say yes</p>
+        </div>
+        <div class="stage" aria-hidden="true">
+          <div class="st flower flower-left" data-flower style="--x: 4%; --y: 34%; --w: 42%"></div>
+          <div class="st flower flower-right" data-flower style="--x: 54%; --y: 34%; --w: 42%"></div>
+          <div class="st pop" data-bubble="yes" style="--x: 20%; --y: 12%; --w: 20%; --r: -6deg; --dy: 8cqw; --at: 0.2; --dur: 0.07"></div>
+          <div class="st pop flip" data-bubble="yes" style="--x: 60%; --y: 12%; --w: 20%; --r: 6deg; --dy: 8cqw; --at: 0.3; --dur: 0.07"></div>
+        </div>
+      </section>
+
+      <!-- 8. SIDE BY SIDE -->
+      <section class="scene walk" id="side-by-side">
+        <p class="statement rise">Meet when it already feels familiar</p>
+        <div class="stage stage-wide" aria-hidden="true">
+          <svg class="path" viewBox="0 0 1000 200">
+            <path d="M-40 120 C 180 60, 380 175, 620 112 S 900 78, 1040 122" fill="none" stroke="#fff" stroke-width="66" />
+            <path d="M-40 120 C 180 60, 380 175, 620 112 S 900 78, 1040 122" fill="none" stroke="#05060f" stroke-width="46" />
+            <path d="M-40 120 C 180 60, 380 175, 620 112 S 900 78, 1040 122" fill="none" stroke="#f4d35e" stroke-width="40" />
+            <path d="M-40 120 C 180 60, 380 175, 620 112 S 900 78, 1040 122" fill="none" stroke="#05060f" stroke-width="3" stroke-dasharray="16 14" />
+          </svg>
+          <div class="walkers">
+            <div class="flower walker walker-a" data-flower></div>
+            <div class="flower walker walker-b" data-flower></div>
+          </div>
+          <div class="st pop" data-moon style="--x: 88%; --y: 2%; --w: 7%; --r: 8deg; --dy: -5cqw; --at: 0.36"></div>
+          <div class="st pop pixel-walk" data-pixel style="--x: 40%; --y: 20%; --w: 6.5%; --r: -9deg; --dy: -5cqw; --at: 0.24"></div>
+          <span class="st tag mint pop" style="--x: 62%; --y: 6%; --r: -4deg; --dy: -5cqw; --at: 0.3">side by side</span>
+        </div>
+      </section>
+
+      <!-- 9. FINAL CTA -->
+      <section class="scene split" id="cta">
+        <div class="copy">
+          <h2 class="display rise">START<br />QUIETLY.</h2>
+          <!-- compare: the slot keeps one fixed size through every state (form, sending, done, error),
+               so nothing on the page moves. compare.js fills in the sending panel and the note. -->
+          <div class="waitlist-slot rise" style="--at: 0.22" data-state="idle">
+            <form class="waitlist" novalidate>
+              <label class="sr-only" for="email-cta">Email</label>
+              <input id="email-cta" type="email" name="email" placeholder="Your email" autocomplete="email" required />
+              <button class="pill pill-black" type="submit">Join the waitlist</button>
+            </form>
+            <div class="send-note" role="alert" hidden><div class="flower send-sad"></div><p class="send-copy"></p></div>
+            <div class="send-panel" role="status" hidden></div>
+          </div>
+        </div>
+        <div class="stage" aria-hidden="true">
+          <div class="st" style="--x: 14%; --y: 10%; --w: 72%">
+            <!-- compare: same sway wrapper as the hero flower; the "hi" bubble sits inside it,
+                 so it sways with the flower. Its position and width are in % of the flower. -->
+            <div class="sway">
+              <div class="flower" data-flower></div>
+              <div class="st pop flip" data-bubble="hi" style="--x: 1%; --y: -2%; --w: 27%; --r: -6deg; --dy: 6cqw; --at: 0.44; --dur: 0.06"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="faq">
+        <div class="faq-item">
+          <details class="tag lilac" style="--r: -1.5deg">
+            <summary>Friends or dating?</summary>
+            <p>Both. Whoever your people turn out to be.</p>
+          </details>
+        </div>
+        <div class="faq-item">
+          <details class="tag pink" style="--r: 1deg">
+            <summary>What about photos?</summary>
+            <p>You choose from the start, later when you both want to, or only when you meet. You can share pieces of your world anytime.</p>
+          </details>
+        </div>
+        <div class="faq-item">
+          <details class="tag butter" style="--r: -1deg">
+            <summary>Is it safe?</summary>
+            <p>Every step is mutual. Nothing opens until you both say yes, and your photos stay hidden until you choose.</p>
+          </details>
+        </div>
+        <div class="faq-item">
+          <details class="tag mint" style="--r: 1.5deg">
+            <summary>What does the AI do?</summary>
+            <p>It writes and paces the questions, finds people who resonate with you, and suggests a calm first meeting. Then it steps back.</p>
+          </details>
+        </div>
+      </div>
+      <nav class="footer-links" aria-label="Footer">
+        <span class="wordmark">PRELUDE</span>
+        <a class="pill pill-white pill-small" href="#">Privacy</a>
+        <a class="pill pill-white pill-small" href="#">Contact</a>
+        <a class="pill pill-white pill-small" href="#hero">Back to top</a>
+      </nav>
+    </footer>
+
+    <button class="frame-toggle" type="button">frame: iphone</button>
+
+    <script src="script.js"></script>
+    <script src="compare/compare.js?v=26"></script>
+  </body>
+</html>

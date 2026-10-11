@@ -1,0 +1,807 @@
+/* The landing page's second stylesheet (index.html loads it after styles.css).
+   html[data-frame='drawn' | 'iphone'] switches the phone frame; everything else is the landing page. */
+
+/* ---------- phone frame: shared ---------- */
+
+/* sizes inside a device are in cqw = % of the device's own width */
+.device {
+  container-type: inline-size;
+}
+
+.device-body {
+  position: relative;
+  isolation: isolate;
+}
+
+.device-screen {
+  position: relative;
+  aspect-ratio: 390 / 844;
+  overflow: hidden;
+  background: var(--blue);
+}
+
+/* the prototype renders at 390x844 and is scaled to the screen (--s, set in compare.js);
+   it is a clip, not an app: no pointer events, no focus */
+.device-screen iframe {
+  display: block;
+  width: 390px;
+  height: 844px;
+  border: 0;
+  transform-origin: 0 0;
+  transform: scale(var(--s, 0.4));
+  pointer-events: none;
+}
+
+.island {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink);
+  border-radius: 999px;
+}
+
+.device-btn {
+  display: none;
+}
+
+/* ---------- A. drawn: the landing page's own sticker phone ---------- */
+
+[data-frame='drawn'] .device-body {
+  padding: 5cqw;
+  background: #fff;
+  border: 2.5cqw solid var(--ink);
+  border-radius: 18cqw;
+  box-shadow: 0 0 0 6.5cqw #fff;
+  transform: rotate(3deg);
+}
+
+[data-frame='drawn'] .device-screen {
+  border: 2cqw solid var(--ink);
+  border-radius: 12cqw;
+}
+
+[data-frame='drawn'] .island {
+  top: 3.2cqw;
+  width: 26cqw;
+  height: 5.6cqw;
+}
+
+/* ---------- B. iphone: thin bezel, Dynamic Island, metal edge, no rotation ---------- */
+
+[data-frame='iphone'] .device-body {
+  padding: 3.2cqw;
+  background: #08080a;
+  border-radius: 17.5cqw;
+  box-shadow: inset 0 0 0 0.45cqw #2c2c30;
+  filter: drop-shadow(0 2.5cqw 4cqw rgba(5, 6, 15, 0.3));
+}
+
+/* brushed-metal band around the bezel */
+[data-frame='iphone'] .device-body::before {
+  content: '';
+  position: absolute;
+  inset: -1.1cqw;
+  z-index: -1;
+  border-radius: 18.6cqw;
+  background: linear-gradient(135deg, #e6e1d7 0%, #99948a 22%, #dcd7cd 48%, #858076 74%, #d3cdc2 100%);
+  box-shadow: 0 0 0 0.25cqw rgba(5, 6, 15, 0.35);
+}
+
+[data-frame='iphone'] .device-screen {
+  border-radius: 14.3cqw;
+}
+
+[data-frame='iphone'] .island {
+  top: 2.9cqw;
+  width: 30cqw;
+  height: 8.6cqw;
+  background: #000;
+}
+
+[data-frame='iphone'] .device-btn {
+  display: block;
+  position: absolute;
+  z-index: -2;
+  width: 1.2cqw;
+  background: linear-gradient(90deg, #8d887e, #d6d1c7 50%, #8d887e);
+  border-radius: 0.6cqw;
+}
+
+[data-frame='iphone'] .btn-action {
+  left: -1.9cqw;
+  top: 32cqw;
+  height: 8cqw;
+}
+
+[data-frame='iphone'] .btn-up {
+  left: -1.9cqw;
+  top: 46cqw;
+  height: 15cqw;
+}
+
+[data-frame='iphone'] .btn-down {
+  left: -1.9cqw;
+  top: 65cqw;
+  height: 15cqw;
+}
+
+[data-frame='iphone'] .btn-power {
+  right: -1.9cqw;
+  top: 54cqw;
+  height: 24cqw;
+}
+
+/* ---------- one halo thickness for the phones and the photos ----------
+   --halo is the white edge of the "no faces needed" tag: its border is 0.3em of the tag's
+   font size (3.4cqw of the stage, 3.9cqw on mobile). Registered as a length so it is worked
+   out against the stage once and stays that size inside the phone. */
+
+@property --halo {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 4px;
+}
+
+#answer .stage > *,
+#world .stage > * {
+  --halo: calc(3.4cqw * 0.3);
+}
+
+@media (max-width: 800px) {
+  #answer .stage > *,
+  #world .stage > * {
+    --halo: calc(3.9cqw * 0.3);
+  }
+}
+
+/* ---------- B: a plain sticker phone, the same component in both sections ----------
+   just the screen, a solid black bezel, a black pill, and the white halo */
+
+[data-frame='iphone'] .device-simple .device-body {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  box-shadow: none;
+  filter: none;
+  transform: rotate(1.5deg);
+}
+
+[data-frame='iphone'] .device-simple .device-body::before,
+[data-frame='iphone'] .device-simple .device-btn {
+  display: none;
+}
+
+/* shows through only if the clip is slow to load: match each screen's own colour */
+[data-frame='iphone'] #world .device-screen {
+  background: var(--lilac);
+}
+
+#answer .device-screen {
+  background: var(--mint);
+}
+
+[data-frame='iphone'] .device-simple .device-screen {
+  border: 2.2cqw solid var(--ink);
+  border-radius: 15cqw;
+  box-shadow: 0 0 0 var(--halo) #fff;
+}
+
+[data-frame='iphone'] .device-simple .island {
+  top: 2.6cqw;
+  width: 28cqw;
+  height: 7.4cqw;
+  background: var(--ink);
+}
+
+/* ---------- real photos in the sticker frame (sizes in cqw of the stage) ---------- */
+
+.photo-sticker {
+  background: #fff;
+  border-radius: 1.6cqw;
+  box-shadow: 0 0 0 var(--halo) #fff;
+}
+
+.photo-sticker img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border: 0.9cqw solid var(--ink);
+  border-radius: 1.6cqw;
+}
+
+/* file not there yet: a labelled slot instead of a broken image */
+.photo-sticker.missing img {
+  display: none;
+}
+
+.photo-sticker.missing::before {
+  content: attr(data-label);
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  padding: 1em;
+  font-size: 2.6cqw;
+  line-height: 1.1;
+  text-align: center;
+  text-transform: uppercase;
+  background: #e6e9f0;
+  border: 0.9cqw solid var(--ink);
+  border-radius: 1.2cqw;
+}
+
+/* ---------- tester toggle ---------- */
+
+.frame-toggle {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  z-index: 20;
+  padding: 7px 11px;
+  font: 12px/1 system-ui, sans-serif;
+  color: #fff;
+  background: rgba(5, 6, 15, 0.82);
+  border: 0;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* ---------- copy changes for this page ---------- */
+
+/* the seven scene lines share one style: Bebas Neue (loaded from fonts/ by styles.css), uppercase */
+.statement {
+  max-width: 13em;
+  font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
+  font-size: clamp(34px, 3.9vw, 60px);
+  line-height: 0.92;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* a little more room for the statement beside the stickers */
+@media (min-width: 801px) {
+  .split:has(> .statement) {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  }
+}
+
+.walk .statement {
+  padding: 0 var(--pad);
+}
+
+/* ---------- footer FAQ: sentence case, no jumping, quiet focus ---------- */
+
+/* tilt from the top edge, so the question stays put when the answer opens below it */
+.faq .tag {
+  text-transform: none;
+  transform-origin: 50% 0;
+}
+
+/* each cell reserves the height of its open answer (set in compare.js),
+   so opening or closing an item moves nothing else */
+.faq-item {
+  min-height: var(--open-height, 0px);
+}
+
+.faq summary {
+  outline: none;
+}
+
+.faq summary:focus-visible {
+  outline: 2px dashed var(--ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- speech bubbles and the typed answer: lowercase, like the tags ---------- */
+
+.bubble-text,
+.typed {
+  text-transform: none;
+}
+
+/* ---------- moon: shape only, no smile line (the last path of the sticker) ---------- */
+
+[data-moon] path:last-child {
+  display: none;
+}
+
+/* ---------- hero flower: a gentle sway, as if on a stem ---------- */
+
+.sway {
+  position: relative; /* anchors the "hi" bubble to the flower */
+  transform-origin: 50% 64%;
+  animation: sway 3s ease-in-out infinite alternate; /* -4deg to 4deg and back = 6s */
+}
+
+@keyframes sway {
+  from {
+    transform: rotate(-4deg);
+  }
+  to {
+    transform: rotate(4deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sway {
+    animation: none;
+  }
+}
+
+/* ---------- pixel smiley by the path: larger on the narrow mobile stage ---------- */
+
+@media (max-width: 800px) {
+  /* the path scene spans the full width at every size (styles.css caps stages by height here) */
+  .stage-wide {
+    width: 100%;
+  }
+
+  .pixel-walk {
+    --x: 18% !important;
+    --y: 4% !important;
+    --w: 12% !important;
+  }
+
+  /* keep the tag clear of the moon on the narrow stage */
+  #side-by-side .tag {
+    --x: 46% !important;
+    --y: 12% !important;
+  }
+}
+
+/* ---------- typed answer: typed letter by letter by compare.js ----------
+   the invisible ghost holds the full text, so the sticker keeps its final width throughout */
+
+.typed .typed-text {
+  position: relative;
+  overflow: visible;
+  width: auto;
+}
+
+.typed > .caret {
+  display: none;
+}
+
+.typed-ghost {
+  visibility: hidden;
+  padding-right: 0.25em; /* room for the caret after the last letter */
+}
+
+.typed-live {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  white-space: pre;
+}
+
+.typed-live .caret {
+  flex: none;
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---------- hero speech bubble: "someone is typing" dots ---------- */
+
+/* three Anton full stops at the bubble text size, so they match the crowd bubble's "..." exactly */
+.typing-dots {
+  position: absolute;
+  left: 50%;
+  top: 41.7%;
+  display: flex;
+  font-size: 27cqw;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+}
+
+.typing-dots i {
+  font-style: normal;
+  opacity: 0.3;
+  animation: typing-dot 1.6s ease-in-out infinite;
+}
+
+.typing-dots i:nth-child(2) {
+  animation-delay: 0.22s;
+}
+
+.typing-dots i:nth-child(3) {
+  animation-delay: 0.44s;
+}
+
+@keyframes typing-dot {
+  0%,
+  55%,
+  100% {
+    opacity: 0.3;
+    transform: none;
+  }
+  25% {
+    opacity: 1;
+    transform: translateY(-12%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typed-live .caret {
+    animation: none;
+  }
+
+  .typing-dots i {
+    animation: none;
+    opacity: 0.8;
+  }
+}
+
+/* ---------- "answer in your own time": wider voice message ---------- */
+
+/* 25 bars instead of 13: tighter stagger so the last bar still finishes as the scene settles */
+#answer .wave .bar {
+  transform: scaleY(clamp(0.18, calc((var(--p) - 0.18 - var(--i) * 0.007) / 0.06), 1));
+}
+
+@media (max-width: 800px) {
+  /* the typed answer is wide enough for the longest answer; start it further left on small screens */
+  #answer .typed {
+    --x: 20% !important;
+    --y: 70% !important;
+  }
+
+  /* keep the voice message's halo inside the screen edge */
+  #answer .wave {
+    --x: -3% !important;
+  }
+}
+
+/* ---------- side by side: the flowers walk in from the left and right off the page ----------
+   one straight mapping from scroll to position (constant speed, fully reversible): the pair is
+   past the right edge, halo included, at --p 0.8, while the path is still on screen */
+
+#side-by-side {
+  overflow-x: clip;
+}
+
+#side-by-side .walkers {
+  --t: clamp(0, calc((var(--p) - 0.05) / 0.75), 1);
+  transform: translateX(calc(-30cqw + var(--t) * 134cqw));
+}
+
+@media (max-width: 800px) {
+  /* the pair is wider on the narrow stage, so it starts further left to cover the same ground */
+  #side-by-side .walkers {
+    transform: translateX(calc(-55cqw + var(--t) * 159cqw));
+  }
+}
+
+/* ---------- pixel smiley: moon yellow with a black outline, white halo kept ---------- */
+
+[data-pixel] circle:nth-child(2) {
+  fill: var(--butter); /* the moon's fill */
+  stroke: var(--ink);
+  stroke-width: 0.55px; /* same weight as the moon's outline at this sticker's scale */
+}
+
+/* ---------- the turn: Bebas setup, big-title punchline, and a flower peeking in ---------- */
+
+#turn {
+  overflow: clip; /* the flower waits off the right edge */
+}
+
+/* the headline always sits above the flower */
+.turn-head {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* "LIKE THE FIFTH?" is 4.32em wide in Dharma Gothic E, so 17.6vw makes the line about 76vw
+     long: it ends well before the flower at the right edge */
+  --punch: clamp(80px, 17.6vw, 340px);
+  --line1: clamp(34px, 3.9vw, 60px); /* the size of line 1 (same value as .statement) */
+  /* the space you see between the two lines: line 1's baseline to the top of the capitals */
+  --gap: max(2vw, 10px);
+}
+
+.turn-head .statement {
+  max-width: none;
+}
+
+/* as large as fits the content width on one line; the 1px stroke and the hair of negative
+   tracking merge the F and T crossbars in "FIFTH" */
+.turn-punch {
+  /* font, weight and case come from the shared .display class (Dharma Gothic E) */
+  font-size: var(--punch);
+  line-height: 0.86;
+  /* the boxes carry built-in space: 0.2165em under line 1's baseline and 0.029em above these
+     capitals. Take both off, so the visible gap is exactly --gap */
+  margin-top: calc(var(--gap) - 0.2165 * var(--line1) - 0.029 * var(--punch));
+  letter-spacing: -0.008em;
+  white-space: nowrap;
+  -webkit-text-stroke: 1px var(--ink);
+}
+
+/* --peek: 0 hidden -> 1 a quarter in, as line 1 arrives
+   --lean: 0 -> 1 half in, with a small bounce, as the punchline arrives
+   --glow: 0 grey and asleep -> 1 in colour, eyes open, smiling */
+.peek-flower {
+  --peek: clamp(0, calc((var(--p) - 0.16) / 0.12), 1);
+  --lean: clamp(0, calc((var(--p) - 0.3) / 0.14), 1);
+  --glow: clamp(0, calc((var(--p) - 0.33) / 0.11), 1);
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: 78%;
+  width: min(24vw, 38vh);
+  /* 112% = fully off the edge, halo included; 75% = a quarter showing; 50% = half */
+  transform: translate(calc(112% - var(--peek) * 37% - var(--lean) * 25% - sin(var(--lean) * 3.1416) * 7%), -50%)
+    rotate(calc(-15deg + sin(var(--lean) * 3.1416) * 6deg));
+}
+
+.pf-petals {
+  fill: color-mix(in srgb, #fff calc(var(--glow) * 100%), #cfcfd4);
+}
+
+.pf-centre {
+  fill: color-mix(in srgb, var(--butter) calc(var(--glow) * 100%), #a9a9ae);
+}
+
+.pf-cheeks {
+  fill: color-mix(in srgb, var(--pink) calc(var(--glow) * 100%), #96969b);
+}
+
+.pf-eyes-closed,
+.pf-mouth-flat {
+  opacity: calc(1 - var(--glow));
+}
+
+.pf-mouth-smile {
+  opacity: var(--glow);
+}
+
+/* the eyes open from a line */
+.pf-eyes-open {
+  opacity: clamp(0, calc(var(--glow) * 3), 1);
+  transform: translate(0, -1px) scale(1, var(--glow)) translate(0, 1px);
+}
+
+@media (max-width: 800px) {
+  /* two lines here: "LIKE THE" is 2.35em wide, so 30vw makes it about 70vw long */
+  .turn-head {
+    --punch: 30vw;
+  }
+
+  /* two lines on small screens: LIKE THE / FIFTH? */
+  .turn-punch {
+    line-height: 0.8; /* Dharma's capitals are about 0.7em tall: this keeps the two lines apart */
+    /* at this line height there is no extra space above the capitals */
+    margin-top: calc(var(--gap) - 0.2165 * var(--line1));
+    white-space: normal;
+  }
+
+  /* smaller and lower on small screens, so it stays clear of the wrapped headline */
+  .peek-flower {
+    top: 84%;
+    width: min(50vw, 30vh);
+  }
+}
+
+/* ---------- waitlist form: sending, done and error states (built by compare.js) ---------- */
+
+/* one fixed footprint for every state: the form on top, room for a note under it */
+.waitlist-slot {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  min-height: 124px;
+}
+
+.waitlist-slot[data-state='sending'] .waitlist,
+.waitlist-slot[data-state='done'] .waitlist {
+  display: none;
+}
+
+/* short messages in the section-line font, small */
+.send-copy {
+  font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
+  font-size: clamp(19px, 1.6vw, 24px);
+  line-height: 0.95;
+  text-transform: uppercase;
+}
+
+/* --- error: a sad little flower under the input, leaning towards it --- */
+
+.send-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  padding-left: 14px;
+}
+
+.send-note[hidden],
+.send-panel[hidden] {
+  display: none;
+}
+
+/* (#cta in these selectors outranks the scroll-driven state of the section's big flower) */
+#cta .send-sad {
+  --fold: 0.5; /* petals pulled in, flat mouth, eyes closed */
+  --eyes: 0;
+  flex: none;
+  width: 46px;
+  transform: rotate(-14deg);
+}
+
+/* the face shifts up and across, towards the input above */
+.send-sad .f-features {
+  transform: translate(3px, -6px);
+}
+
+/* --- sending and done --- */
+
+.send-panel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.send-scene {
+  position: relative;
+  flex: none;
+  width: 132px;
+  height: 124px;
+}
+
+.send-bubble {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 64px;
+}
+
+/* what the bubble is showing: centred on the bubble's body */
+.send-item {
+  position: absolute;
+  left: 50%;
+  top: 41.7%;
+  width: 30px;
+  margin: -15px 0 0 -15px;
+  display: grid;
+  place-items: center;
+  animation: send-pop 320ms cubic-bezier(0.34, 1.4, 0.64, 1) both;
+}
+
+.send-item span {
+  font-size: 17px;
+  line-height: 1;
+}
+
+@keyframes send-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+#cta .send-flower {
+  --fold: 0;
+  --eyes: 0; /* eyes closed while sending */
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  width: 84px;
+}
+
+.send-flower .f-open,
+.send-flower .f-closed {
+  transition: opacity 350ms ease, transform 350ms ease;
+}
+
+.send-held {
+  position: absolute;
+  left: 98px;
+  top: 86px;
+  width: 32px;
+  transform: rotate(12deg);
+}
+
+.send-text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.send-progress {
+  width: min(220px, 100%);
+}
+
+/* fills over the sending time; --send-ms is set by compare.js */
+.send-progress .fill {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: send-fill var(--send-ms, 2500ms) linear both;
+}
+
+@keyframes send-fill {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* done: the envelope leaves the bubble in a small arc, the flower wakes and bounces once */
+.waitlist-slot[data-state='done'] .send-progress,
+.waitlist-slot[data-state='done'] .send-held {
+  display: none;
+}
+
+#cta .waitlist-slot[data-state='done'] .send-flower {
+  --eyes: 1;
+  animation: send-bounce 520ms cubic-bezier(0.34, 1.4, 0.64, 1) 250ms both;
+}
+
+@keyframes send-bounce {
+  40% {
+    transform: translateY(-9px);
+  }
+}
+
+.send-item.fly {
+  animation: send-fly 1100ms cubic-bezier(0.3, 0, 0.5, 1) 200ms both;
+}
+
+@keyframes send-fly {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  45% {
+    opacity: 1;
+    transform: translate(16px, -30px) rotate(10deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(52px, -52px) rotate(24deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .send-item,
+  .send-item.fly,
+  .send-progress .fill,
+  #cta .waitlist-slot[data-state='done'] .send-flower {
+    animation: none;
+  }
+
+  /* the envelope has already gone */
+  .send-item.fly {
+    opacity: 0;
+  }
+}
+
+/* ---------- "show your world": photos fan out from the small photo in the phone ----------
+   compare.js sets the stacked start position and plays the spring; .stacked marks the start state */
+
+.fan {
+  will-change: transform;
+}
+
+/* while stacked, the plants photo is the one on top; once they fan out, the normal order applies */
+.fan.stacked:nth-of-type(3) {
+  z-index: 1;
+}
+
+/* The stack waits unseen. The conversation in the phone scrolls on its own loop, so a visible
+   stack would sometimes sit where the small photo no longer is; the photos show from the first
+   frame of the fan-out, when the conversation has just been put back to the top. */
+.fan.stacked {
+  opacity: 0;
+}

@@ -1,0 +1,10 @@
+{
+  "name": "prelude-landing-wireframe",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "npx serve .",
+    "deploy": "npx vercel deploy --prod",
+    "deploy:netlify": "npx netlify-cli deploy --dir=. --prod"
+  }
+}

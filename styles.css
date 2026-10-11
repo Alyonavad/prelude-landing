@@ -1,0 +1,754 @@
+/* Prelude landing page. Flat blue, black ink, die-cut stickers. */
+
+@font-face {
+  font-family: 'Anton';
+  src: url('fonts/Anton-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dharma Gothic E';
+  src: url('fonts/DharmaGothicE-Heavy.otf') format('opentype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Bebas Neue';
+  src: url('fonts/BebasNeue-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Nority';
+  src: url('fonts/Nority-Demo.otf') format('opentype');
+  font-display: swap;
+}
+
+/* registered so the hero bloom can animate it; 0 = open flower, 1 = closed bud */
+@property --fold {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+:root {
+  --blue: #6f8fea;
+  --grey-bg: #9c9ca1;
+  --ink: #05060f;
+  --lilac: #d9b8f2;
+  --pink: #f4a6b8;
+  --butter: #f4d35e;
+  --mint: #a8e3b5;
+  --pad: clamp(18px, 3.2vw, 44px);
+  /* 0..1, set from scroll: the page drains to grey in scene 3 and recovers in scene 4 */
+  --grey: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: clip;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  overflow-x: clip;
+  font-family: 'Anton', 'Arial Narrow', Impact, sans-serif;
+  color: var(--ink);
+  background: var(--blue);
+  background: color-mix(in srgb, var(--grey-bg) calc(var(--grey) * 100%), var(--blue));
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+  font-weight: 400;
+}
+
+a {
+  color: inherit;
+}
+
+svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.svg-caps {
+  font-family: 'Anton', 'Arial Narrow', Impact, sans-serif;
+  fill: var(--ink);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- type ---------- */
+
+.wordmark {
+  font-family: 'Nority', 'Arial Black', sans-serif;
+  font-size: clamp(20px, 1.9vw, 34px);
+  line-height: 1;
+  text-decoration: none;
+}
+
+.display {
+  font-family: 'Dharma Gothic E', 'Anton', Impact, sans-serif;
+  font-size: clamp(64px, 10.6vw, 220px);
+  line-height: 0.74;
+  text-transform: uppercase;
+}
+
+.line {
+  max-width: 16em;
+  font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
+  font-size: clamp(24px, 2.8vw, 50px);
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.hero .line {
+  font-family: inherit;
+  font-size: clamp(22px, 2.3vw, 40px);
+  text-transform: lowercase;
+}
+
+/* ---------- pills ---------- */
+
+.pill {
+  display: inline-block;
+  padding: 0.85em 2em;
+  font: inherit;
+  font-size: clamp(16px, 1.45vw, 26px);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.pill-black {
+  color: #fff;
+  background: var(--ink);
+}
+
+.pill-white {
+  color: var(--ink);
+  background: #fff;
+}
+
+.pill-small {
+  padding: 0.6em 1.2em;
+  font-size: 15px;
+  border-width: 2px;
+}
+
+.waitlist-link {
+  position: fixed;
+  top: calc(var(--pad) - 6px);
+  right: var(--pad);
+  z-index: 10;
+}
+
+/* ---------- scenes ---------- */
+
+.scene {
+  /* scroll progress; 0.5 = scene fills the viewport. script.js updates it. */
+  --p: 0.5;
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(84px, 11vh, 120px) var(--pad) var(--pad);
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 4vw;
+  align-items: center;
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: clamp(20px, 2.4vw, 40px);
+}
+
+.drains {
+  filter: grayscale(var(--grey));
+}
+
+/* a stage is the sticker board of a scene; stickers are placed and sized in % of it */
+.stage {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 78vh);
+  aspect-ratio: 10 / 9;
+  container-type: inline-size;
+}
+
+.st {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w, auto);
+  transform: rotate(var(--r, 0deg));
+}
+
+/* text that settles in as the scene arrives */
+.rise {
+  --t: clamp(0, calc((var(--p) - var(--at, 0.14)) / 0.14), 1);
+  opacity: var(--t);
+  transform: translateY(calc((1 - var(--t)) * 28px));
+}
+
+/* stickers that arrive from (--dx, --dy) once the scene reaches --at */
+.pop {
+  --t: clamp(0, calc((var(--p) - var(--at, 0.2)) / var(--dur, 0.12)), 1);
+  opacity: clamp(0, calc(var(--t) * 4), 1);
+  transform: translate(calc((1 - var(--t)) * var(--dx, 0cqw)), calc((1 - var(--t)) * var(--dy, 0cqw)))
+    rotate(var(--r, 0deg)) scale(calc(var(--s0, 0.4) + (1 - var(--s0, 0.4)) * var(--t)));
+}
+
+.float {
+  --s0: 0.9;
+}
+
+/* ---------- tags ---------- */
+
+.tag {
+  display: inline-block;
+  padding: 0.62em 1.05em 0.58em;
+  font-size: var(--tag, 3.4cqw);
+  line-height: 1;
+  text-transform: lowercase;
+  white-space: nowrap;
+  border: 0.3em solid #fff;
+  border-radius: 0.55em;
+}
+
+.tag::before {
+  content: '';
+  position: absolute;
+  inset: 0.18em;
+  border: 0.11em dashed var(--ink);
+  border-radius: 0.3em;
+  pointer-events: none;
+}
+
+.lilac {
+  background: var(--lilac);
+}
+
+.pink {
+  background: var(--pink);
+}
+
+.butter {
+  background: var(--butter);
+}
+
+.mint {
+  background: var(--mint);
+}
+
+.loud {
+  --tag: 4.5cqw;
+}
+
+/* ---------- speech bubbles ---------- */
+
+[data-bubble] {
+  container-type: inline-size;
+}
+
+.bubble-text {
+  position: absolute;
+  left: 50%;
+  top: 41.7%;
+  transform: translate(-50%, -50%);
+  font-size: 27cqw;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.bubble-text.long {
+  font-size: 20cqw;
+}
+
+/* ---------- flower ---------- */
+
+.flower svg {
+  transform: scale(calc(1 - var(--fold) * 0.1));
+}
+
+.f-petal {
+  transform: rotate(calc(var(--a) + var(--fold) * 20deg)) scale(calc(1 - var(--fold) * 0.42));
+}
+
+/* --look: -1..1 shifts the face left or right, so two flowers can turn to each other */
+.f-features {
+  transform: translate(calc(var(--look, 0) * 7px), 0);
+}
+
+.f-closed {
+  opacity: calc(1 - var(--eyes, 0));
+}
+
+.f-open {
+  opacity: var(--eyes, 0);
+  transform: translate(0, -1px) scale(1, var(--eyes, 0)) translate(0, 1px);
+}
+
+.f-smile {
+  opacity: clamp(0, calc((0.5 - var(--fold)) * 10), 1);
+}
+
+.f-flat {
+  opacity: clamp(0, calc((var(--fold) - 0.4) * 10), 1);
+}
+
+/* ---------- 1. hero ---------- */
+
+.hero {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  grid-template-areas:
+    'word word'
+    'title stage'
+    'cta stage';
+  column-gap: 3vw;
+  padding-top: var(--pad);
+}
+
+.hero .wordmark {
+  grid-area: word;
+  justify-self: start;
+  padding: 0.5em 0;
+}
+
+.hero-title {
+  grid-area: title;
+  align-self: center;
+  font-size: clamp(72px, min(14vw, (100vh - 290px) / 2.2), 320px);
+  line-height: 0.72;
+  white-space: nowrap;
+}
+
+.hero .stage {
+  grid-area: stage;
+  align-self: center;
+  width: min(100%, 82vh);
+}
+
+.hero-cta {
+  grid-area: cta;
+  display: flex;
+  align-items: center;
+  gap: 3vw;
+}
+
+.hero-cta .pill {
+  padding: 1.1em 2.8em;
+}
+
+.hero .flower {
+  animation: bloom 1500ms cubic-bezier(0.34, 1.4, 0.64, 1) 300ms both;
+}
+
+@keyframes bloom {
+  from {
+    --fold: 1;
+  }
+  to {
+    --fold: 0;
+  }
+}
+
+/* ---------- 2. the crowd: stickers close in, petals start to fold ---------- */
+
+#crowd .flower {
+  --fold: calc(clamp(0, (var(--p) - 0.2) / 0.3, 1) * 0.55);
+}
+
+/* ---------- 3. the retreat: the flower closes into a bud ---------- */
+
+.solo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3vh;
+  text-align: center;
+}
+
+.stage-small {
+  width: min(46vw, 44vh);
+  aspect-ratio: 1;
+}
+
+#retreat .flower {
+  --fold: calc(0.55 + clamp(0, (var(--p) - 0.12) / 0.3, 1) * 0.45);
+}
+
+/* ---------- 4. the turn: the bud reopens ---------- */
+
+.turn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.turn-title {
+  font-size: clamp(56px, 13.5vw, 270px);
+}
+
+.turn-title span {
+  display: block;
+}
+
+.stage-corner {
+  position: absolute;
+  right: 6vw;
+  bottom: 5vh;
+  width: min(24vw, 34vh);
+  aspect-ratio: 1;
+}
+
+#turn .flower {
+  --fold: calc(1 - clamp(0, (var(--p) - 0.2) / 0.28, 1) * 0.6);
+}
+
+/* ---------- 5. answer in your own time ---------- */
+
+.phone {
+  transform: rotate(3deg);
+}
+
+.bar {
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scaleY(clamp(0.18, calc((var(--p) - 0.18 - var(--i) * 0.012) / 0.06), 1));
+}
+
+.typed {
+  --t: clamp(0, calc((var(--p) - 0.34) / 0.13), 1);
+  display: flex;
+  align-items: center;
+  padding: 0.7em 1em;
+  font-size: 3.6cqw;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  background: #fff;
+  border: 0.09em solid var(--ink);
+  border-radius: 0.7em;
+  box-shadow: 0 0 0 0.3em #fff;
+}
+
+/* --full is the measured text width (script.js); without it the full answer shows */
+.typed-text {
+  overflow: hidden;
+  width: calc(var(--t) * var(--full));
+}
+
+.caret {
+  width: 0.09em;
+  height: 1em;
+  margin-left: 0.12em;
+  background: var(--ink);
+}
+
+/* ---------- 7. nothing is one-sided: yes, yes, then they turn ---------- */
+
+#mutual .flower {
+  --turn: clamp(0, calc((var(--p) - 0.36) / 0.1), 1);
+}
+
+.flower-left {
+  --look: var(--turn);
+  transform: translateX(calc(var(--turn) * 3cqw)) rotate(calc(var(--turn) * 10deg));
+}
+
+.flower-right {
+  --look: calc(var(--turn) * -1);
+  transform: translateX(calc(var(--turn) * -3cqw)) rotate(calc(var(--turn) * -10deg));
+}
+
+/* tail on the right for the second bubble; only the shape is mirrored, not the text */
+.flip path {
+  transform: translate(44px, 0) scale(-1, 1);
+}
+
+/* ---------- 8. side by side: two flowers travel the path as you scroll ---------- */
+
+.walk {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4vh;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.walk .line {
+  padding: 0 var(--pad);
+}
+
+.stage-wide {
+  width: 100%;
+  aspect-ratio: 1000 / 380;
+  --walker: 15cqw;
+  --tag: 1.7cqw;
+}
+
+.path {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
+.walkers {
+  --t: clamp(0, calc((var(--p) - 0.1) / 0.65), 1);
+  position: absolute;
+  left: 0;
+  bottom: 5.5cqw;
+  transform: translateX(calc(3cqw + var(--t) * (94cqw - var(--walker) * 1.85)));
+}
+
+.walker {
+  position: absolute;
+  bottom: 0;
+  width: var(--walker);
+  transform: translateY(calc(sin(var(--p) * 80) * 0.7cqw)) rotate(calc(sin(var(--p) * 80) * 5deg));
+}
+
+.walker-a {
+  left: 0;
+  --look: 0.6;
+}
+
+.walker-b {
+  left: calc(var(--walker) * 0.85);
+  --look: -0.6;
+  transform: translateY(calc(sin(var(--p) * 80 + 1.6) * 0.7cqw)) rotate(calc(sin(var(--p) * 80 + 1.6) * 5deg));
+}
+
+/* ---------- 9. final cta: fully open, then the eyes open ---------- */
+
+#cta .flower {
+  --fold: calc(0.4 - clamp(0, (var(--p) - 0.12) / 0.26, 1) * 0.4);
+  --eyes: clamp(0, calc((var(--p) - 0.4) / 0.07), 1);
+}
+
+.waitlist {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 560px;
+  padding: 5px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+}
+
+.waitlist input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0.6em 0.6em 0.6em 1.2em;
+  font: 400 clamp(16px, 1.3vw, 20px) system-ui, sans-serif;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
+
+.waitlist:focus-within {
+  box-shadow: 0 0 0 4px rgba(5, 6, 15, 0.25);
+}
+
+.form-error {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 1.2em;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+/* ---------- footer ---------- */
+
+.footer {
+  padding: 8vh var(--pad) var(--pad);
+}
+
+.faq {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.faq .tag {
+  --tag: clamp(18px, 1.5vw, 24px);
+  display: block;
+  position: relative;
+  white-space: normal;
+  transform: rotate(var(--r, 0deg));
+}
+
+.faq summary {
+  cursor: pointer;
+}
+
+.faq p {
+  margin-top: 0.7em;
+  font-size: 0.82em;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  margin-top: 8vh;
+}
+
+.footer-links .wordmark {
+  margin-right: auto;
+}
+
+/* ---------- no scroll animation (reduced motion or no JS): scene 3 is simply grey ---------- */
+
+html:not(.scrolly) #retreat {
+  background: var(--grey-bg);
+  filter: grayscale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero .flower {
+    animation: none;
+  }
+}
+
+/* ---------- mobile: headline over stickers ---------- */
+
+@media (max-width: 800px) {
+  .scene {
+    padding-top: 84px;
+  }
+
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: center;
+    gap: 5vh;
+  }
+
+  .stage {
+    width: min(100%, 56vh);
+  }
+
+  .tag {
+    --tag: 3.9cqw;
+  }
+
+  .loud {
+    --tag: 5cqw;
+  }
+
+  .typed {
+    font-size: 4.6cqw;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas:
+      'word'
+      'title'
+      'stage'
+      'cta';
+    row-gap: 3vh;
+    padding-top: var(--pad);
+  }
+
+  .hero-title {
+    font-size: min(29vw, 18vh);
+  }
+
+  .hero .stage {
+    width: min(100%, 44vh);
+  }
+
+  .hero-cta {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .turn {
+    gap: 4vh;
+  }
+
+  .turn-title {
+    font-size: 15vw;
+  }
+
+  .stage-corner {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    align-self: flex-end;
+    width: 44vw;
+  }
+
+  .stage-small {
+    width: 62vw;
+  }
+
+  .stage-wide {
+    aspect-ratio: 1000 / 620;
+    --walker: 26cqw;
+    --tag: 3.6cqw;
+  }
+
+  .walkers {
+    bottom: 3cqw;
+  }
+
+  .waitlist .pill {
+    padding: 0.85em 1.2em;
+  }
+
+  .faq {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 801px) and (max-width: 1100px) {
+  .faq {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

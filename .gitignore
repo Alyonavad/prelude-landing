@@ -1,0 +1,13 @@
+# macOS
+.DS_Store
+
+# dependencies and build output (the prototype copy is built with a temporary node_modules link)
+node_modules/
+compare/prototype-src/out/
+
+# deploy tooling
+.vercel/
+.netlify/
+
+# logs
+*.log
