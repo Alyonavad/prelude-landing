@@ -1,14 +1,13 @@
 // The landing page's second script (index.html loads it after script.js): prototype clips,
 // typing, the waitlist form's error note and the photo fan-out.
 
-// The prototype always renders at 402x874 (iPhone 16 Pro, its design size); scale it to whatever
-// size the screen is drawn at.
+// The prototype always renders at 390x844; scale it to whatever size the screen is drawn at.
 const fit = new ResizeObserver((entries) => {
   entries.forEach(({ target }) => {
     const frame = target.querySelector('iframe');
-    const scale = target.clientWidth / 402;
+    const scale = target.clientWidth / 390;
     frame.style.setProperty('--s', scale);
-    // The opening can be a touch taller than 402:874, so stretch the clip to cover it (plus 2px of
+    // The opening is a touch taller than 390:844, so stretch the clip to cover it (plus 2px of
     // overlap); otherwise the clip's bottom edge shows as a faint line above the bezel.
     frame.style.height = `${Math.ceil(target.clientHeight / scale) + 2}px`;
   });
@@ -163,11 +162,11 @@ function fanOrigin() {
   const frame = screen.querySelector('iframe');
   const stageBox = fanStage.getBoundingClientRect();
   const bodyBox = body.getBoundingClientRect();
-  const scale = screen.clientWidth / 402;
+  const scale = screen.clientWidth / 390;
 
-  // the small photo inside the prototype, in the prototype's own 402px-wide layout
+  // the small photo inside the prototype, in the prototype's own 390px-wide layout
   // (measured from the top of the conversation, whatever it has scrolled to)
-  let x = 201;
+  let x = 195;
   let y = 400;
   let width = 120;
   let exact = false;

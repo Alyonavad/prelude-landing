@@ -1,18 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import checkCircle from './icons/check-circle.svg'
-import windowPhoto from './photos/window.jpg'
-import plantsPhoto from './photos/plants.jpg'
-import roomPhoto from './photos/room.jpg'
-
-const AUTOSAVE_MS = 600 // inputs autosave this long after the last keystroke (docs/ui-rules.md)
+import { useEffect, useMemo, useState } from 'react'
 import { COLOURS, flowerSVG, bubbleSVG, MOON, voiceSVG, photoSVG, faceSVG, PATH } from './art.js'
 import { YOUR_FLOWER, FERN_FLOWER, REFLECT, TENDENCIES, QOTD, ANON, QUESTIONS, AFTERGLOW, ACTIVITIES } from './data.js'
 
 const STORAGE_KEY = 'prelude-prototype-v3'
-// The phone frame: iPhone 16 Pro, the size the designs in docs/screens/ are drawn at
-// (a 402 x 874 screen plus the 3px frame)
-const PHONE_W = 408
-const PHONE_H = 880
 const TOTAL = QUESTIONS.length
 const MATCH_DELAY = 6000
 const REPLY_DELAY = 2600
@@ -98,16 +88,6 @@ const ALL_JUMPS = JUMPS.flatMap(([, items]) => items)
 //   &photos=real       world photos come from photos/<kind>.jpg next to the built file
 const PARAMS = new URLSearchParams(typeof location !== 'undefined' ? location.search : '')
 const EMBED = ALL_JUMPS.find((j) => j[0] === PARAMS.get('screen'))
-// Embedded in the landing page's own phone (a ?screen= clip, ?embed=1, or simply inside an iframe):
-// the landing draws the frame and the pill, so the prototype's device chrome stays hidden.
-const IN_FRAME = (() => {
-  try {
-    return window.self !== window.top
-  } catch {
-    return true
-  }
-})()
-const EMBEDDED = !!EMBED || IN_FRAME || PARAMS.get('embed') === '1'
 const LOOP_MS = EMBED ? Number(PARAMS.get('loop')) || 0 : 0
 const REAL_PHOTOS = PARAMS.get('photos') === 'real'
 // &name=<name> shows the other person under a different name on the prelude screens
@@ -142,7 +122,7 @@ export default function App() {
   // embedded clip: start the screen over every LOOP_MS
   const [epoch, setEpoch] = useState(0)
   useEffect(() => {
-    if (EMBEDDED) document.documentElement.classList.add('embed')
+    if (EMBED) document.documentElement.classList.add('embed')
     if (EMBED && SCREEN_BG) document.documentElement.classList.add(`bg-${SCREEN_BG}`)
     if (!LOOP_MS) return
     const t = setInterval(() => {
@@ -198,9 +178,8 @@ export default function App() {
 
   return (
     <div className="page">
-      <div className="slot" style={{ width: PHONE_W * scale, height: PHONE_H * scale }}>
+      <div className="slot" style={{ width: 390 * scale, height: 844 * scale }}>
         <div className={`phone ${tone}`} style={{ transform: `scale(${scale})` }}>
-          <DeviceChrome />
           {waiting && s.matchArrived && (
             <button className="banner pop" onClick={() => set({ screen: 'match' })}>
               <span>someone is here.</span>
@@ -266,9 +245,9 @@ export default function App() {
   )
 }
 
-// Shrinks the phone frame to fit short desktop windows.
+// Shrinks the 390×844 frame to fit short desktop windows.
 function useFrameScale() {
-  const calc = () => (window.innerWidth < 500 ? 1 : Math.min(1, (window.innerHeight - 52) / (PHONE_H + 6)))
+  const calc = () => (window.innerWidth < 500 ? 1 : Math.min(1, (window.innerHeight - 52) / 850))
   const [scale, setScale] = useState(calc)
   useEffect(() => {
     const onResize = () => setScale(calc())
@@ -286,36 +265,6 @@ function useSettle(from, to, delay = 250) {
     return () => clearTimeout(t)
   }, [to])
   return v
-}
-
-/* ---------- device chrome: status bar, Dynamic Island, home indicator (desktop frame only) ---------- */
-
-function DeviceChrome() {
-  return (
-    <>
-      <div className="device-status" aria-hidden="true">
-        <span className="device-time">9:41</span>
-        <span className="device-icons">
-          <svg viewBox="0 0 18 12" width="18" height="12">
-            <rect x="0" y="8" width="3" height="4" rx="1" fill="currentColor" />
-            <rect x="5" y="5.5" width="3" height="6.5" rx="1" fill="currentColor" />
-            <rect x="10" y="3" width="3" height="9" rx="1" fill="currentColor" />
-            <rect x="15" y="0" width="3" height="12" rx="1" fill="currentColor" />
-          </svg>
-          <svg viewBox="0 0 16 12" width="16" height="12">
-            <path d="M8 2.2c2.4 0 4.6.9 6.2 2.4l1.2-1.2C13.4 1.5 10.8.4 8 .4S2.6 1.5.6 3.4l1.2 1.2C3.4 3.1 5.6 2.2 8 2.2zm0 3.4c1.4 0 2.8.5 3.8 1.4L13 5.8C11.7 4.5 9.9 3.8 8 3.8s-3.7.7-5 2l1.2 1.2c1-.9 2.4-1.4 3.8-1.4zm0 3.4c.6 0 1.1.2 1.5.6L8 11.1 6.5 9.6c.4-.4.9-.6 1.5-.6z" fill="currentColor" />
-          </svg>
-          <svg viewBox="0 0 27 13" width="27" height="13">
-            <rect x="0.5" y="0.5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity="0.4" />
-            <rect x="2" y="2" width="20" height="9" rx="2" fill="currentColor" />
-            <path d="M25 4.5v4c.8-.3 1.3-1.1 1.3-2s-.5-1.7-1.3-2z" fill="currentColor" opacity="0.4" />
-          </svg>
-        </span>
-      </div>
-      <div className="device-island" aria-hidden="true" />
-      <div className="device-home" aria-hidden="true" />
-    </>
-  )
 }
 
 /* ---------- stickers ---------- */
@@ -389,129 +338,17 @@ function Progress({ value }) {
 
 const fmt = (secs) => `${Math.floor(secs / 60)}:${String(secs % 60).padStart(2, '0')}`
 
-/* ---------- the answer screen, used everywhere (design: docs/screens/group-1) ---------- */
+/* ---------- the answer screen, used everywhere ---------- */
 
-const sentence = (t) => t.charAt(0).toUpperCase() + t.slice(1)
-const VOICE_BARS = [14, 26, 18, 34, 22, 12, 30, 20, 36, 16, 26, 12, 20, 30, 16, 24, 34, 18, 24, 14]
-
-// A recorded voice note as content: a straight white bar with an interactive play button.
-function VoiceNote({ length, playing, onToggle }) {
-  return (
-    <div className={`ui-voice${playing ? ' playing' : ''}`}>
-      <button className="ui-play" aria-label={playing ? 'Pause' : 'Play'} onClick={onToggle}>
-        <svg viewBox="0 0 20 20" aria-hidden="true">
-          {playing ? <path d="M6 4h3v12H6zM11 4h3v12h-3z" fill="#fff" /> : <path d="M7 4.5v11l9-5.5z" fill="#fff" />}
-        </svg>
-      </button>
-      <svg className="ui-voice-bars" viewBox={`0 0 ${VOICE_BARS.length * 8} 40`} preserveAspectRatio="none" aria-hidden="true">
-        {VOICE_BARS.map((h, i) => (
-          <rect key={i} className="bar" style={{ '--i': i }} x={i * 8 + 2} y={20 - h / 2} width="4" height={h} rx="2" fill="#05060f" />
-        ))}
-      </svg>
-      <span className="ui-voice-time">{length}</span>
-    </div>
-  )
-}
-
-const MicIcon = () => (
-  <svg viewBox="0 0 32 32" aria-hidden="true">
-    <rect x="11.5" y="4" width="9" height="15" rx="4.5" fill="#fff" />
-    <path d="M7.5 15.5a8.5 8.5 0 0 0 17 0M16 24v4.5" fill="none" stroke="#fff" strokeWidth="2.4" strokeLinecap="round" />
-  </svg>
-)
-const StopIcon = () => (
-  <svg viewBox="0 0 32 32" aria-hidden="true">
-    <rect x="9" y="9" width="14" height="14" rx="2.5" fill="#ff1f1f" />
-  </svg>
-)
-const TrashIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
-    <path d="M4.5 6.5h15M9.5 6.5V4.8c0-.7.6-1.3 1.3-1.3h2.4c.7 0 1.3.6 1.3 1.3v1.7M6.5 6.5l.8 12.2c.1.9.8 1.6 1.7 1.6h6c.9 0 1.6-.7 1.7-1.6l.8-12.2M10.3 10.5v6M13.7 10.5v6" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-)
-
-// "A piece of your world": the prototype's sample photos stand in for the camera and the library.
-const SAMPLE_PHOTOS = { window: windowPhoto, plants: plantsPhoto, room: roomPhoto }
-const PHOTO_KEYS = Object.keys(SAMPLE_PHOTOS)
-const MAX_PHOTOS = 6
-// answers saved before photos were a list had one illustrated photo
-const photosOf = (a) => (a.photos || (a.photo ? [a.photo === 'plant' ? 'plants' : a.photo] : [])).filter((k) => SAMPLE_PHOTOS[k])
-
-// Photos as content: straight, no halo, thin black outline. `onRemove` adds a × to each.
-function PhotoThumbs({ photos, small, onRemove }) {
-  if (!photos.length) return null
-  return (
-    <div className={`ui-thumbs${small ? ' small' : ''}`}>
-      {photos.map((key, n) => (
-        <div className="ui-thumb" key={`${n}-${key}`}>
-          <img src={SAMPLE_PHOTOS[key]} alt={`Photo: ${key}`} />
-          {onRemove && (
-            <button className="ui-remove" aria-label={`Remove photo ${n + 1}`} onClick={() => onRemove(n)}>
-              <svg viewBox="0 0 12 12" aria-hidden="true">
-                <path d="M3.5 3.5l5 5M8.5 3.5l-5 5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" />
-              </svg>
-            </button>
-          )}
-        </div>
-      ))}
-    </div>
-  )
-}
-
-// Prototype stand-in for the iOS photo picker: an action sheet, then a library grid.
-function PhotoPicker({ room, onAdd, onClose }) {
-  const [step, setStep] = useState('menu') // menu | library
-  const [chosen, setChosen] = useState([])
-  const toggle = (key) =>
-    setChosen((c) => (c.includes(key) ? c.filter((k) => k !== key) : c.length < room ? [...c, key] : c))
-  return (
-    <div className="ui-scrim" onClick={onClose}>
-      {step === 'menu' ? (
-        <div className="ui-sheet" role="dialog" aria-label="Add a photo" onClick={(e) => e.stopPropagation()}>
-          <div className="ui-list">
-            <button onClick={() => onAdd([PHOTO_KEYS[Math.floor(Math.random() * PHOTO_KEYS.length)]])}>Take photo</button>
-            <button onClick={() => setStep('library')}>Choose from library</button>
-          </div>
-          <button className="ui-sheet-cancel" onClick={onClose}>Cancel</button>
-        </div>
-      ) : (
-        <div className="ui-library" role="dialog" aria-label="Choose from library" onClick={(e) => e.stopPropagation()}>
-          <div className="ui-library-head">
-            <button className="ui-link" onClick={onClose}>Cancel</button>
-            <p className="ui-caption">{room === 1 ? 'You can add 1 more' : `Choose up to ${room}`}</p>
-          </div>
-          <div className="ui-grid">
-            {PHOTO_KEYS.map((key) => (
-              <button key={key} className="ui-pick" aria-label={`Photo: ${key}`} aria-pressed={chosen.includes(key)} onClick={() => toggle(key)}>
-                <img src={SAMPLE_PHOTOS[key]} alt="" />
-                {chosen.includes(key) && (
-                  <span className="ui-pick-check" aria-hidden="true">
-                    <svg viewBox="0 0 16 16">
-                      <path d="M4 8.4 6.8 11.1 12 5.2" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-          <button className="ui-primary" disabled={!chosen.length} onClick={() => onAdd(chosen)}>
-            Add
-          </button>
-        </div>
-      )}
-    </div>
-  )
-}
-
-// `head` goes above the question card (the reflective questions put their progress and flower there).
-function Answer({ s, set, head, label, question, sample, sendLabel = 'send', onSend }) {
+function Answer({ s, set, label, question, sample, sendLabel = 'send', onSend }) {
   const mode = s.mode
   const [rec, setRec] = useState('idle') // idle | recording | done
   const [secs, setSecs] = useState(0)
   const [listening, setListening] = useState(false)
+  const [transcript, setTranscript] = useState(false)
   const [text, setText] = useState('')
-  const [picker, setPicker] = useState(false)
-  const [photos, setPhotos] = useState([])
+  const [picking, setPicking] = useState(false)
+  const [photo, setPhoto] = useState(null)
 
   useEffect(() => {
     if (rec !== 'recording') return
@@ -519,92 +356,94 @@ function Answer({ s, set, head, label, question, sample, sendLabel = 'send', onS
     return () => clearInterval(t)
   }, [rec])
 
-  // "Send" is the save here, so the text box shows no autosave check (docs/ui-rules.md)
   const canSend = mode === 'voice' ? rec === 'done' : text.trim().length > 0
-  const send = () => onSend({ kind: mode, text: mode === 'voice' ? sample : text.trim(), photos })
-  const discard = () => {
-    setRec('idle')
-    setListening(false)
-    setSecs(0)
-  }
+  const send = () => onSend({ kind: mode, text: mode === 'voice' ? sample : text.trim(), photo })
 
   return (
     <>
-      {head}
-      {label && <p className="ui-caption rise">{sentence(label)}</p>}
-      <div className="content-card white answer-question rise" style={{ '--d': '60ms' }}>
-        <p className="content-text">{question}</p>
-      </div>
+      {label && <p className="small rise">{label}</p>}
+      <h1 className="question rise" style={{ margin: '8px 0 18px', '--d': '60ms' }}>{question}</h1>
 
-      <div className="ui-segmented answer-toggle rise" role="group" aria-label="Answer by" style={{ '--d': '120ms' }}>
+      <div className="row rise" style={{ '--d': '120ms', marginBottom: 18 }}>
         {['voice', 'writing'].map((m) => (
-          <button key={m} aria-pressed={mode === m} onClick={() => set({ mode: m })}>
-            {sentence(m)}
+          <button key={m} className={`pill pill-small ${mode === m ? 'pill-black' : 'pill-white'}`} aria-pressed={mode === m} onClick={() => set({ mode: m })}>
+            {m}
           </button>
         ))}
       </div>
 
-      <div className="answer-input">
-        {mode === 'voice' ? (
-          rec === 'done' ? (
-            <div className="answer-recorded">
-              <VoiceNote playing={listening} onToggle={() => setListening((l) => !l)} length={fmt(Math.max(secs, 1))} />
-              <button className="ui-delete" aria-label="Delete recording" onClick={discard}>
-                <TrashIcon />
-              </button>
-            </div>
-          ) : (
+      {mode === 'voice' ? (
+        <div className="recorder">
+          {rec === 'idle' && (
             <>
-              <button
-                className={`ui-record${rec === 'recording' ? ' on' : ''}`}
-                aria-label={rec === 'recording' ? 'Stop recording' : 'Record'}
-                onClick={() => (rec === 'recording' ? setRec('done') : (setSecs(0), setRec('recording')))}
-              >
-                {rec === 'recording' ? <StopIcon /> : <MicIcon />}
-              </button>
-              <p className="ui-caption" aria-live="polite">
-                {rec === 'recording' ? fmt(secs) : 'Tap to record. Take your time.'}
-              </p>
+              <button className="rec pop" aria-label="record" onClick={() => { setSecs(0); setRec('recording') }}><i /></button>
+              <p className="small">tap to record. take your time.</p>
             </>
-          )
-        ) : (
-          <textarea
-            className="ui-input ui-textarea"
-            aria-label="Your answer"
-            placeholder="Write as much or as little as you like."
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-        )}
-      </div>
-
-      <div className="world">
-        <p className="ui-caption world-caption">A piece of your world. Things, places, views. Not faces yet.</p>
-        <div className="ui-photo-row">
-          {photos.length < MAX_PHOTOS && (
-            <button className="ui-add-tile" aria-label="Add a photo" onClick={() => setPicker(true)}>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 5v14M5 12h14" stroke="#05060f" strokeWidth="2" strokeLinecap="round" />
-              </svg>
-            </button>
           )}
-          <PhotoThumbs photos={photos} onRemove={(n) => setPhotos((p) => p.filter((_, i) => i !== n))} />
+          {rec === 'recording' && (
+            <>
+              <Voice fill="#fff" playing onToggle={() => {}} style={{ '--w': '230px', '--r': '-3deg', pointerEvents: 'none' }} />
+              <p className="timer">{fmt(secs)}</p>
+              <button className="rec on" aria-label="stop" onClick={() => setRec('done')}><i /></button>
+            </>
+          )}
+          {rec === 'done' && (
+            <>
+              <div className="pop">
+                <Voice fill={COLOURS.pink} playing={listening} onToggle={() => setListening((l) => !l)} style={{ '--w': '220px', '--r': '-2deg' }} />
+              </div>
+              <div className="row wrap" style={{ justifyContent: 'center', marginTop: 6 }}>
+                <button className="pill pill-small pill-white" onClick={() => setTranscript((t) => !t)}>
+                  {transcript ? 'hide transcript' : 'see transcript'}
+                </button>
+                <button className="pill pill-small pill-white" onClick={() => { setRec('idle'); setListening(false); setTranscript(false) }}>
+                  record again
+                </button>
+              </div>
+              <button className="link" onClick={() => setListening((l) => !l)}>{listening ? 'stop listening' : `listen · ${fmt(secs)}`}</button>
+              {transcript && <div className="note pop body" style={{ '--r': '1deg', alignSelf: 'stretch' }}>{sample}</div>}
+            </>
+          )}
         </div>
-        {photos.length >= MAX_PHOTOS && <p className="ui-caption">That's plenty for one answer.</p>}
-      </div>
-      {picker && (
-        <PhotoPicker
-          room={MAX_PHOTOS - photos.length}
-          onClose={() => setPicker(false)}
-          onAdd={(keys) => {
-            setPhotos((p) => [...p, ...keys].slice(0, MAX_PHOTOS))
-            setPicker(false)
-          }}
+      ) : (
+        <textarea
+          className="field rise"
+          rows={5}
+          placeholder="write as much or as little as you like."
+          value={text}
+          onChange={(e) => setText(e.target.value)}
         />
       )}
 
-      <div className="actions answer-actions">
-        <button className="ui-primary" disabled={!canSend} onClick={send}>{sentence(sendLabel)}</button>
+      <div className="world">
+        {!picking && !photo && (
+          <button className="pill pill-small pill-white" onClick={() => setPicking(true)}>+ add a piece of your world</button>
+        )}
+        {(picking || photo) && (
+          <>
+            <div className="row between">
+              <p className="small">a piece of your world. things, places, views. not faces yet.</p>
+              <button className="link" onClick={() => { setPhoto(null); setPicking(false) }}>{photo ? 'remove' : 'close'}</button>
+            </div>
+            <div className="picker">
+              {['window', 'plant', 'room'].map((kind, i) => (
+                <button
+                  key={kind}
+                  className={`photo pop${photo === kind ? ' on' : ''}`}
+                  style={{ '--r': `${[-5, 4, -3][i]}deg`, '--d': `${i * 70}ms` }}
+                  aria-label={`photo: ${kind}`}
+                  aria-pressed={photo === kind}
+                  onClick={() => setPhoto(photo === kind ? null : kind)}
+                  dangerouslySetInnerHTML={{ __html: photoSVG(kind) }}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      <div className="actions">
+        <button className="pill pill-black pill-block" disabled={!canSend} onClick={send}>{sendLabel}</button>
       </div>
     </>
   )
@@ -621,52 +460,31 @@ function Mine({ answer, fallback, r = 1 }) {
       </div>
       {a.kind === 'voice' && <Voice fill="#e6e9f0" wide style={{ marginTop: 8, marginBottom: 8 }} />}
       <p className="body" style={{ marginTop: 6 }}>{a.text}</p>
-      <PhotoThumbs photos={photosOf(a)} small />
+      {a.photo && <Photo kind={a.photo} style={{ '--w': '96px', '--r': '-4deg', marginTop: 8 }} />}
     </div>
   )
 }
 
 /* ---------- 1. welcome ---------- */
 
-// The four tags around the headline: position in % of the screen width / px below the headline,
-// resting tilt, the side each one slides in from (dx) and when it arrives in the entrance sequence.
-// Final positions from docs/screens/group-1/welcome-final.png.
-const WELCOME_TAGS = [
-  { text: 'no profiles', colour: 'lilac', x: '12.2%', y: 63, r: 3, dx: -40, d: 1200 },
-  { text: 'in your own time', colour: 'pink', x: '64.2%', y: 64, r: -3, dx: 40, d: 1200 },
-  { text: 'side by side', colour: 'mint', x: '11.9%', y: 402, r: 2, dx: -40, d: 1500 },
-  { text: 'only a mutual yes', colour: 'butter', x: '57%', y: 406, r: -3, dx: 40, d: 1500 },
-]
-
-// Plays its entrance once each time the screen opens (CSS animations run on mount, not on re-render).
 function Welcome({ set }) {
+  const tag = (x, y, r, d) => ({ '--x': x, '--y': y, '--r': r, '--d': d, '--tag': '13px' })
   return (
     <>
-      <div className="welcome-hero">
-        <h1 className="ui-title welcome-title w-head">NO<br />SMALL<br />TALK. NO<br />SHOW.</h1>
-        <div className="welcome-flower w-flower" aria-hidden="true">
-          <div className="w-sway">
-            <Flower />
-          </div>
-        </div>
-        {WELCOME_TAGS.map((t) => (
-          <span
-            key={t.text}
-            className={`tag ${t.colour} welcome-tag w-tag`}
-            aria-hidden="true"
-            style={{ left: t.x, top: t.y, '--r': `${t.r}deg`, '--dx': `${t.dx}px`, '--d': `${t.d}ms` }}
-          >
-            {t.text}
-          </span>
-        ))}
+      <span className="wordmark rise">PRELUDE</span>
+      <h1 className="display xl rise" style={{ marginTop: 16, '--d': '80ms' }}>NO SMALL<br />TALK.<br />NO SHOW.</h1>
+      <div className="stage hero-stage" aria-hidden="true">
+        <Flower className="st bloom" style={{ '--x': '21%', '--y': '4%', '--w': '58%' }} />
+        <span className="st tag lilac pop" style={tag('3%', '6%', '-5deg', '700ms')}>no profiles</span>
+        <span className="st tag pink pop" style={tag('58%', '0%', '6deg', '820ms')}>in your own time</span>
+        <span className="st tag butter pop" style={tag('52%', '68%', '4deg', '940ms')}>only a mutual yes</span>
+        <span className="st tag mint pop" style={tag('6%', '84%', '-5deg', '1060ms')}>side by side</span>
+        <Bubble className="st pop" style={{ '--x': '4%', '--y': '48%', '--w': '17%', '--d': '1200ms' }} />
+        <Sticker html={MOON} className="st pop" style={{ '--x': '85%', '--y': '86%', '--w': '13%', '--d': '1300ms' }} />
       </div>
-      <p className="content-text center welcome-line w-line">
-        say it how it is. your answers only reach people who think like you.
-      </p>
+      <p className="body rise" style={{ '--d': '200ms' }}>say it how it is. your answers only reach people who think like you.</p>
       <div className="actions">
-        <button className="ui-primary w-fade" style={{ '--d': '2600ms' }} onClick={() => set({ screen: 'reflect', reflect: 0 })}>
-          Start quietly
-        </button>
+        <button className="pill pill-black pill-block" onClick={() => set({ screen: 'reflect', reflect: 0 })}>start quietly</button>
       </div>
     </>
   )
@@ -675,10 +493,6 @@ function Welcome({ set }) {
 /* ---------- 2. reflective questions ---------- */
 
 const foldAfter = (answered) => Math.max(0, 1 - answered * 0.3)
-const FLOWER_BOX = 144 // a 61pt bud at the start, as in the design
-// The flower's slot is as tall as the flower gets on these screens (reflection 3), so nothing below it
-// moves as it opens: it only grows inside the slot.
-const FLOWER_SLOT = Math.round(FLOWER_BOX * (0.865 - 0.44 * foldAfter(REFLECT.length - 1)))
 
 function Reflect({ s, set }) {
   const i = s.reflect
@@ -686,30 +500,26 @@ function Reflect({ s, set }) {
   // the bud opens a little with each answer already given
   const fold = useSettle(foldAfter(Math.max(0, i - 1)), foldAfter(i))
   return (
-    <Answer
-      s={s}
-      set={set}
-      head={
-        <>
-          <div className="answer-head">
-            <p className="ui-caption">Reflection {i + 1} of {REFLECT.length}</p>
-            <p className="ui-caption">Just for you, no one is waiting</p>
-          </div>
-          <div className="answer-flower" style={{ height: FLOWER_SLOT }}>
-            <Flower fold={fold} size={FLOWER_BOX} />
-          </div>
-        </>
-      }
-      question={REFLECT[i].q}
-      sample={REFLECT[i].sample}
-      sendLabel={last ? 'send' : 'send & next question'}
-      onSend={(a) =>
-        set((p) => ({
-          answers: p.answers.map((x, n) => (n === i ? a : x)),
-          ...(last ? { screen: 'mirror' } : { reflect: i + 1 }),
-        }))
-      }
-    />
+    <>
+      <div className="row between" style={{ marginBottom: 14 }}>
+        <Flower fold={fold} size={84} />
+        <span className="small">reflection {i + 1} of {REFLECT.length}</span>
+      </div>
+      <Answer
+        s={s}
+        set={set}
+        label="just for you · no one is waiting"
+        question={REFLECT[i].q}
+        sample={REFLECT[i].sample}
+        sendLabel={last ? 'send' : 'send & next question'}
+        onSend={(a) =>
+          set((p) => ({
+            answers: p.answers.map((x, n) => (n === i ? a : x)),
+            ...(last ? { screen: 'mirror' } : { reflect: i + 1 }),
+          }))
+        }
+      />
+    </>
   )
 }
 
@@ -718,107 +528,32 @@ function Reflect({ s, set }) {
 function Mirror({ s, set }) {
   const update = (i, patch) => set((p) => ({ mirror: p.mirror.map((m, n) => (n === i ? { ...m, ...patch } : m)) }))
   const fold = useSettle(foldAfter(2), 0)
-  const timers = useRef({}) // autosave debounce, one per card
-  useEffect(() => () => Object.values(timers.current).forEach(clearTimeout), [])
+  const done = s.mirror.every((m) => m.status)
 
-  const hasWords = (m) => m.saved && m.text.trim()
-  // a card counts once it is "Yes", or "Not quite" with the person's own words saved
-  const answered = (m) => m.status === 'yes' || (m.status === 'edit' && hasWords(m))
-  const done = s.mirror.every(answered)
-
-  // typing makes the text unsaved; it saves itself AUTOSAVE_MS after the last keystroke
-  const type = (i, text) => {
-    clearTimeout(timers.current[i])
-    update(i, { text, saved: false, open: true })
-    if (text.trim()) timers.current[i] = setTimeout(() => update(i, { saved: true }), AUTOSAVE_MS)
-  }
-  // leaving the input (or Enter): with text, save and close it; empty, it stays open and unanswered
-  const leave = (i, text) => {
-    clearTimeout(timers.current[i])
-    if (text.trim()) update(i, { saved: true, open: false })
-  }
-
-  // Follows docs/ui-rules.md: the flower is the only sticker; tendencies are straight content
-  // cards; yes / not quite are choice pills; inputs autosave; one primary button at the bottom.
   return (
     <>
-      <h1 className="ui-title rise">HERE'S WHAT WE NOTICED.</h1>
-      <div className="sway mirror-flower">
-        <Flower fold={fold} />
-      </div>
-      <div className="portrait-cards">
+      <h1 className="display m rise">HERE'S YOUR FLOWER.</h1>
+      <Flower className="mirror-flower" fold={fold} />
+      <div className="stack">
         {TENDENCIES.map((t, i) => {
           const m = s.mirror[i]
-          // "Not quite" shows the input until there are saved words, or after "Edit"
-          const editing = m.status === 'edit' && (m.open || !hasWords(m))
-          const ownWords = m.status === 'edit' && !editing
           return (
-            <div className={`content-card ${t.colour} rise`} key={i} style={{ '--d': `${500 + i * 120}ms` }}>
-              {ownWords ? (
-                <div>
-                  <p className="ui-caption">In your words</p>
-                  <p className="content-text">{m.text.trim()}</p>
-                </div>
-              ) : (
-                <p className="content-text">{t.text}</p>
-              )}
-              {editing && (
-                <div className="ui-field">
-                  <input
-                    className="ui-input"
-                    type="text"
-                    enterKeyHint="done"
-                    aria-label={`What would you say instead of: ${t.text}`}
-                    placeholder="What would you say instead?"
-                    autoFocus
-                    value={m.text}
-                    onFocus={(e) => {
-                      const end = e.target.value.length
-                      e.target.setSelectionRange(end, end)
-                    }}
-                    onChange={(e) => type(i, e.target.value)}
-                    onBlur={(e) => leave(i, e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') e.currentTarget.blur()
-                    }}
-                  />
-                  {hasWords(m) && <img className="ui-saved" src={checkCircle} alt="" aria-hidden="true" />}
-                  <span className="sr-only" aria-live="polite">
-                    {hasWords(m) ? 'Saved' : ''}
-                  </span>
-                </div>
-              )}
-              <div className="choices">
-                {ownWords && (
-                  <button className="ui-link" onClick={() => update(i, { open: true })}>
-                    Edit
-                  </button>
-                )}
-                {[
-                  ['yes', 'Yes'],
-                  ['edit', 'Not quite'],
-                ].map(([value, label]) => (
-                  <button
-                    key={value}
-                    className="ui-choice"
-                    aria-pressed={m.status === value}
-                    // "Not quite" opens the input unless there are saved words to show
-                    onClick={() => update(i, value === 'edit' ? { status: value, open: !hasWords(m) } : { status: value })}
-                  >
-                    {m.status === value && <span className="ui-check" aria-hidden="true">✓</span>}
-                    {label}
-                  </button>
-                ))}
+            <div className="tend pop" key={i} style={{ '--d': `${500 + i * 140}ms` }}>
+              <span className={`tag ${t.colour}`} style={{ '--r': `${t.r}deg`, '--tag': '14px' }}>{t.text}</span>
+              <div className="row">
+                <button className={`pill pill-small ${m.status === 'yes' ? 'pill-black' : 'pill-white'}`} aria-pressed={m.status === 'yes'} onClick={() => update(i, { status: 'yes' })}>yes</button>
+                <button className={`pill pill-small ${m.status === 'edit' ? 'pill-black' : 'pill-white'}`} aria-pressed={m.status === 'edit'} onClick={() => update(i, { status: 'edit' })}>not quite</button>
               </div>
+              {m.status === 'edit' && (
+                <input className="field" type="text" placeholder="what's closer to the truth?" value={m.text} onChange={(e) => update(i, { text: e.target.value })} />
+              )}
             </div>
           )
         })}
       </div>
-      <p className="ui-caption ui-hint">These are guesses. You can change them anytime.</p>
+      <p className="small center" style={{ marginTop: 18 }}>these are guesses. you can change them anytime.</p>
       <div className="actions">
-        <button className="ui-primary" disabled={!done} onClick={() => set({ screen: 'matching', picks: {}, matchArrived: false })}>
-          Find your people
-        </button>
+        <button className="pill pill-black pill-block" disabled={!done} onClick={() => set({ screen: 'matching', picks: {}, matchArrived: false })}>find your people</button>
       </div>
     </>
   )

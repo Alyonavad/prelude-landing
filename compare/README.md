@@ -14,9 +14,9 @@ Three files in `photos/`: `window.jpg`, `plants.jpg`, `room.jpg` (any shape; the
 
 ```
 compare.css      the sticker phone, real-photo stickers, type and animation styles
-compare.js       scaling the 402x874 prototype to the phone, typing, waitlist error note, photo fan-out
+compare.js       scaling the 390x844 prototype to the phone, typing, waitlist error note, photo fan-out
 prototype.html   built copy of the prototype with the embed parameters below
-prototype-src/   source of that copy (kept in sync with ../../prelude/src)
+prototype-src/   source of that copy (from ../../prelude/v3)
 photos/          the three world photos
 iphone-frame.png the iPhone mockup image (no longer used by the page)
 ```
@@ -25,7 +25,7 @@ iphone-frame.png the iPhone mockup image (no longer used by the page)
 
 `prototype.html` adds URL parameters the original does not have:
 
-- `?screen=<id>` opens straight on a screen, without reading or saving progress. Embedded (with `?screen=`, `?embed=1`, or inside any iframe) the prototype hides its own status bar, Dynamic Island and home indicator: the landing page's phone draws those. Ids are the tester panel's jump ids in `prototype-src/app.jsx` (`mirror` is "your flower"; `world` is a prelude with both answers and world photos, added for this page).
+- `?screen=<id>` opens straight on a screen, without reading or saving progress. Ids are the tester panel's jump ids in `prototype-src/app.jsx` (`mirror` is "your flower"; `world` is a prelude with both answers and world photos, added for this page).
 - `&loop=<ms>` restarts the screen every `<ms>`, and scrolls to the bottom halfway through, so it plays like a clip.
 - `&name=<name>` shows the other person under a different name on the prelude screens (the page uses `alex`).
 - `&bg=mint` gives the embedded screen a mint background (used for "your flower").

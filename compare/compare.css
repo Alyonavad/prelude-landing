@@ -15,7 +15,7 @@
 
 .device-screen {
   position: relative;
-  aspect-ratio: 402 / 874;
+  aspect-ratio: 390 / 844;
   overflow: hidden;
   background: var(--blue);
   border: 2.2cqw solid var(--ink);
@@ -23,12 +23,12 @@
   box-shadow: 0 0 0 var(--halo) #fff;
 }
 
-/* the prototype renders at 402x874 and is scaled to the screen (--s, set in compare.js);
+/* the prototype renders at 390x844 and is scaled to the screen (--s, set in compare.js);
    it is a clip, not an app: no pointer events, no focus */
 .device-screen iframe {
   display: block;
-  width: 402px;
-  height: 874px;
+  width: 390px;
+  height: 844px;
   border: 0;
   transform-origin: 0 0;
   transform: scale(var(--s, 0.4));
