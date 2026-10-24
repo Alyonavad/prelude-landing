@@ -1,123 +1,8 @@
 /* The landing page's second stylesheet (index.html loads it after styles.css). */
 
-/* ---------- phone: a plain sticker phone, the same component in both sections ----------
-   just the screen, a solid black bezel, a black pill, and the white halo */
-
-/* sizes inside a device are in cqw = % of the device's own width */
-.device {
-  container-type: inline-size;
-}
-
-.device-body {
-  position: relative;
-  transform: rotate(1.5deg);
-}
-
-.device-screen {
-  position: relative;
-  aspect-ratio: 390 / 844;
-  overflow: hidden;
-  background: var(--blue);
-  border: 2.2cqw solid var(--ink);
-  border-radius: 15cqw;
-  box-shadow: 0 0 0 var(--halo) #fff;
-}
-
-/* the prototype renders at 390x844 and is scaled to the screen (--s, set in compare.js);
-   it is a clip, not an app: no pointer events, no focus */
-.device-screen iframe {
-  display: block;
-  width: 390px;
-  height: 844px;
-  border: 0;
-  transform-origin: 0 0;
-  transform: scale(var(--s, 0.4));
-  pointer-events: none;
-}
-
-.island {
-  position: absolute;
-  left: 50%;
-  top: 2.6cqw;
-  width: 28cqw;
-  height: 7.4cqw;
-  transform: translateX(-50%);
-  background: var(--ink);
-  border-radius: 999px;
-}
-
-/* ---------- one halo thickness for the phones and the photos ----------
-   --halo is the white edge of the "no faces needed" tag: its border is 0.3em of the tag's
-   font size (3.4cqw of the stage, 3.9cqw on mobile). Registered as a length so it is worked
-   out against the stage once and stays that size inside the phone. */
-
-@property --halo {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 4px;
-}
-
-#answer .stage > *,
-#world .stage > * {
-  --halo: calc(3.4cqw * 0.3);
-}
-
-@media (max-width: 800px) {
-  #answer .stage > *,
-  #world .stage > * {
-    --halo: calc(3.9cqw * 0.3);
-  }
-}
-
-/* shows through only if the clip is slow to load: match each screen's own colour */
-#world .device-screen {
-  background: var(--lilac);
-}
-
-#answer .device-screen {
-  background: var(--mint);
-}
-
-/* ---------- real photos in the sticker frame (sizes in cqw of the stage) ---------- */
-
-.photo-sticker {
-  background: #fff;
-  border-radius: 1.6cqw;
-  box-shadow: 0 0 0 var(--halo) #fff;
-}
-
-.photo-sticker img {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border: 0.9cqw solid var(--ink);
-  border-radius: 1.6cqw;
-}
-
-/* file not there yet: a labelled slot instead of a broken image */
-.photo-sticker.missing img {
-  display: none;
-}
-
-.photo-sticker.missing::before {
-  content: attr(data-label);
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1;
-  padding: 1em;
-  font-size: 2.6cqw;
-  line-height: 1.1;
-  text-align: center;
-  text-transform: uppercase;
-  background: #e6e9f0;
-  border: 0.9cqw solid var(--ink);
-  border-radius: 1.2cqw;
-}
-
 /* ---------- copy changes for this page ---------- */
 
-/* the seven scene lines share one style: Bebas Neue (loaded from fonts/ by styles.css), uppercase */
+/* the scene lines share one style: Bebas Neue (loaded from fonts/ by styles.css), uppercase */
 .statement {
   max-width: 13em;
   font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
@@ -162,10 +47,9 @@
   border-radius: 4px;
 }
 
-/* ---------- speech bubbles and the typed answer: lowercase, like the tags ---------- */
+/* ---------- speech bubbles: lowercase, like the tags ---------- */
 
-.bubble-text,
-.typed {
+.bubble-text {
   text-transform: none;
 }
 
@@ -219,44 +103,6 @@
   }
 }
 
-/* ---------- typed answer: typed letter by letter by compare.js ----------
-   the invisible ghost holds the full text, so the sticker keeps its final width throughout */
-
-.typed .typed-text {
-  position: relative;
-  overflow: visible;
-  width: auto;
-}
-
-.typed > .caret {
-  display: none;
-}
-
-.typed-ghost {
-  visibility: hidden;
-  padding-right: 0.25em; /* room for the caret after the last letter */
-}
-
-.typed-live {
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: flex;
-  align-items: center;
-  white-space: pre;
-}
-
-.typed-live .caret {
-  flex: none;
-  animation: caret-blink 1s steps(1) infinite;
-}
-
-@keyframes caret-blink {
-  50% {
-    opacity: 0;
-  }
-}
-
 /* ---------- hero speech bubble: "someone is typing" dots ---------- */
 
 /* three Anton full stops at the bubble text size, so they match the crowd bubble's "..." exactly */
@@ -298,33 +144,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .typed-live .caret {
-    animation: none;
-  }
-
   .typing-dots i {
     animation: none;
     opacity: 0.8;
-  }
-}
-
-/* ---------- "answer in your own time": wider voice message ---------- */
-
-/* 25 bars instead of 13: tighter stagger so the last bar still finishes as the scene settles */
-#answer .wave .bar {
-  transform: scaleY(clamp(0.18, calc((var(--p) - 0.18 - var(--i) * 0.007) / 0.06), 1));
-}
-
-@media (max-width: 800px) {
-  /* the typed answer is wide enough for the longest answer; start it further left on small screens */
-  #answer .typed {
-    --x: 20% !important;
-    --y: 70% !important;
-  }
-
-  /* keep the voice message's halo inside the screen edge */
-  #answer .wave {
-    --x: -3% !important;
   }
 }
 
@@ -573,21 +395,57 @@
   transform: translate(3px, -6px);
 }
 
-/* ---------- "show your world": photos fan out from the small photo in the phone ----------
-   compare.js sets the stacked start position and plays the spring; .stacked marks the start state */
+/* ---------- the demo video: the phone is already in the video, on the brand blue ----------
+   about 560px square on desktop beside the line; full width minus 16px margins on mobile */
 
-.fan {
-  will-change: transform;
+.demo-video {
+  position: relative;
+  justify-self: center;
+  width: min(100%, 560px);
+  aspect-ratio: 1;
 }
 
-/* while stacked, the plants photo is the one on top; once they fan out, the normal order applies */
-.fan.stacked:nth-of-type(3) {
-  z-index: 1;
+.demo-video video {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
-/* The stack waits unseen. The conversation in the phone scrolls on its own loop, so a visible
-   stack would sometimes sit where the small photo no longer is; the photos show from the first
-   frame of the fan-out, when the conversation has just been put back to the top. */
-.fan.stacked {
-  opacity: 0;
+/* reduced motion: the poster waits with a small play button (compare.js) */
+.demo-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  color: var(--ink);
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.demo-play[hidden] {
+  display: none;
+}
+
+.demo-play svg {
+  width: 28px;
+  margin-left: 4px; /* the triangle's visual centre */
+  fill: currentColor;
+}
+
+.demo-play:focus-visible {
+  outline: 2px dashed var(--ink);
+  outline-offset: 4px;
+}
+
+@media (max-width: 800px) {
+  .demo-video {
+    width: calc(100vw - 32px);
+  }
 }

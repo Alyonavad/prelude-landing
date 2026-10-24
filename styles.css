@@ -435,68 +435,14 @@ svg {
   --fold: calc(1 - clamp(0, (var(--p) - 0.2) / 0.28, 1) * 0.6);
 }
 
-/* ---------- 5. answer in your own time ---------- */
-
-.phone {
-  transform: rotate(3deg);
-}
-
-.bar {
-  transform-box: fill-box;
-  transform-origin: center;
-  transform: scaleY(clamp(0.18, calc((var(--p) - 0.18 - var(--i) * 0.012) / 0.06), 1));
-}
-
-.typed {
-  --t: clamp(0, calc((var(--p) - 0.34) / 0.13), 1);
-  display: flex;
-  align-items: center;
-  padding: 0.7em 1em;
-  font-size: 3.6cqw;
-  line-height: 1;
-  text-transform: uppercase;
-  white-space: nowrap;
-  background: #fff;
-  border: 0.09em solid var(--ink);
-  border-radius: 0.7em;
-  box-shadow: 0 0 0 0.3em #fff;
-}
-
-/* --full is the measured text width (script.js); without it the full answer shows */
-.typed-text {
-  overflow: hidden;
-  width: calc(var(--t) * var(--full));
-}
-
-.caret {
-  width: 0.09em;
-  height: 1em;
-  margin-left: 0.12em;
-  background: var(--ink);
-}
-
-/* ---------- 7. nothing is one-sided: yes, yes, then they turn ---------- */
-
-#mutual .flower {
-  --turn: clamp(0, calc((var(--p) - 0.36) / 0.1), 1);
-}
-
-.flower-left {
-  --look: var(--turn);
-  transform: translateX(calc(var(--turn) * 3cqw)) rotate(calc(var(--turn) * 10deg));
-}
-
-.flower-right {
-  --look: calc(var(--turn) * -1);
-  transform: translateX(calc(var(--turn) * -3cqw)) rotate(calc(var(--turn) * -10deg));
-}
+/* ---------- speech bubbles, mirrored ---------- */
 
 /* tail on the right for the second bubble; only the shape is mirrored, not the text */
 .flip path {
   transform: translate(44px, 0) scale(-1, 1);
 }
 
-/* ---------- 8. side by side: two flowers travel the path as you scroll ---------- */
+/* ---------- 6. side by side: two flowers travel the path as you scroll ---------- */
 
 .walk {
   display: flex;
@@ -550,7 +496,7 @@ svg {
   transform: translateY(calc(sin(var(--p) * 80 + 1.6) * 0.7cqw)) rotate(calc(sin(var(--p) * 80 + 1.6) * 5deg));
 }
 
-/* ---------- 9. final cta: fully open, then the eyes open ---------- */
+/* ---------- 7. final cta: fully open, then the eyes open ---------- */
 
 #cta .flower {
   --fold: calc(0.4 - clamp(0, (var(--p) - 0.12) / 0.26, 1) * 0.4);
@@ -676,10 +622,6 @@ html:not(.scrolly) #retreat {
 
   .loud {
     --tag: 5cqw;
-  }
-
-  .typed {
-    font-size: 4.6cqw;
   }
 
   .hero {

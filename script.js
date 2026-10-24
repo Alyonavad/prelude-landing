@@ -56,18 +56,6 @@ document.querySelectorAll('[data-bubble]').forEach((el) => (el.innerHTML = bubbl
 document.querySelectorAll('[data-moon]').forEach((el) => (el.innerHTML = MOON));
 document.querySelectorAll('[data-pixel]').forEach((el) => (el.innerHTML = PIXEL));
 
-// The typed answer reveals by width, so it needs the full text width once the font is in.
-const typedText = document.querySelector('.typed-text');
-
-function measureTyped() {
-  typedText.style.width = 'auto';
-  typedText.style.setProperty('--full', `${typedText.scrollWidth}px`);
-  typedText.style.width = '';
-}
-
-document.fonts.ready.then(measureTyped);
-addEventListener('resize', measureTyped);
-
 // ---------- scroll-tied animation ----------
 // Each scene gets --p: 0 as its top edge enters the bottom of the viewport, 0.5 when it fills
 // the viewport, 1 as it leaves the top. All motion is CSS calc() on --p, so it runs both ways.
