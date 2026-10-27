@@ -571,11 +571,6 @@
   text-align: left;
 }
 
-.start-slot .waitlist input {
-  font-family: 'DIN Pro', system-ui, sans-serif;
-  font-weight: 500;
-}
-
 /* the button keeps the page's pill type, like "Join the waitlist" (Anton, same size and spacing) */
 
 .start-slot .pill:disabled {
