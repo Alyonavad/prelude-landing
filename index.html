@@ -8,7 +8,8 @@
     <link rel="preload" href="fonts/Anton-Regular.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="stylesheet" href="styles.css" />
     <!-- compare: bump ?v= on these two files whenever they change, so a browser never pairs a new one with a cached old one -->
-    <link rel="stylesheet" href="compare/compare.css?v=30" />
+    <link rel="stylesheet" href="compare/compare.css?v=35" />
+    <link rel="stylesheet" href="start/start.css?v=7" />
   </head>
   <body>
     <a class="pill pill-white waitlist-link" href="#cta">Join the waitlist</a>
@@ -94,14 +95,27 @@
         </div>
       </section>
 
-      <!-- ONBOARDING DEMO: a section about onboarding will go here later, between the turn and the video -->
+      <!-- 5. START WITH YOURSELF: three questions, a short pause, a portrait, and a way to keep it (start/start.js).
+           The questions and chips are built by the script; each chip carries its portrait type in
+           data-type. The steps share one grid cell, so the section keeps its height between steps. -->
+      <section class="scene start" id="start" aria-labelledby="start-line">
+        <p class="statement rise" id="start-line">Start with yourself</p>
+        <p class="start-caption rise" style="--at: 0.17">This is how Prelude starts</p>
 
-      <!-- 5. THE DEMO VIDEO: the happy path in one take (made from the prototype: prelude/demo/) -->
-      <section class="scene split" id="demo">
+        <div class="start-box">
+          <!-- filled by start.js: question 1, 2 and 3, then the portrait -->
+          <div class="start-steps"></div>
+          <p class="sr-only" aria-live="polite" data-start-live></p>
+        </div>
+      </section>
+
+
+      <!-- 6. THE DEMO VIDEO: the happy path in one take (made from the prototype: prelude/demo/) -->
+      <section class="scene demo" id="demo">
         <p class="statement rise">From a question to a walk</p>
-        <!-- the video already shows the phone on the brand blue, so it gets no frame of its own.
-             compare.js plays it only while it is on screen; with reduced motion it waits behind
-             the poster with a play button. -->
+        <!-- the video is a sticker card: the phone on white, clipped to a card with a black outline
+             and the white halo. compare.js plays it only while it is on screen; with reduced motion
+             it waits behind the poster with a play button. -->
         <div class="demo-video rise" style="--at: 0.2">
           <video autoplay muted loop playsinline preload="metadata" poster="assets/demo/demo-poster.png" aria-label="Prelude, from a match to a first walk: meet Alex, answer a question, share faces, plan a walk.">
             <source src="assets/demo/demo.webm" type="video/webm" />
@@ -113,7 +127,7 @@
         </div>
       </section>
 
-      <!-- 6. SIDE BY SIDE -->
+      <!-- 7. SIDE BY SIDE -->
       <section class="scene walk" id="side-by-side">
         <p class="statement rise">Meet when it already feels familiar</p>
         <div class="stage stage-wide" aria-hidden="true">
@@ -133,7 +147,7 @@
         </div>
       </section>
 
-      <!-- 7. FINAL CTA -->
+      <!-- 8. FINAL CTA -->
       <section class="scene split" id="cta">
         <div class="copy">
           <h2 class="display rise">START<br />QUIETLY.</h2>
@@ -145,7 +159,6 @@
               <button class="pill pill-black" type="submit">Join the waitlist</button>
             </form>
             <div class="waitlist-note" role="alert" hidden>
-              <div class="flower sad-flower" aria-hidden="true"></div>
               <p>Hmm, that email doesn't look right.</p>
             </div>
           </div>
@@ -194,12 +207,13 @@
       <nav class="footer-links" aria-label="Footer">
         <span class="wordmark">PRELUDE</span>
         <a class="pill pill-white pill-small" href="#">Privacy</a>
-        <a class="pill pill-white pill-small" href="#">Contact</a>
+        <a class="pill pill-white pill-small" href="https://www.linkedin.com/in/alyonavad/" target="_blank" rel="noopener noreferrer" aria-label="Contact on LinkedIn (opens in a new tab)">Contact</a>
         <a class="pill pill-white pill-small" href="#hero">Back to top</a>
       </nav>
     </footer>
 
     <script src="script.js"></script>
-    <script src="compare/compare.js?v=30"></script>
+    <script src="compare/compare.js?v=32"></script>
+    <script src="start/start.js?v=9"></script>
   </body>
 </html>

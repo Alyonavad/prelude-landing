@@ -26,15 +26,13 @@ document.querySelectorAll('[data-typing]').forEach((el) => {
 
 // ---------- Waitlist form ----------
 // A valid email is left to the submit handler in script.js, which swaps the form for the
-// thank-you line. An invalid one shows the note with the sad flower under the input instead.
+// thank-you line. An invalid one shows the note under the input instead.
 
 const skipMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 document.querySelectorAll('.waitlist-slot').forEach((slot) => {
   const input = slot.querySelector('input[type="email"]');
   const note = slot.querySelector('.waitlist-note');
-
-  note.querySelector('.flower').innerHTML = FLOWER; // the sticker template in script.js
 
   input.addEventListener('input', () => (note.hidden = true));
 

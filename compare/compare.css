@@ -1,5 +1,13 @@
 /* The landing page's second stylesheet (index.html loads it after styles.css). */
 
+/* DIN Pro Medium: text links, chips and the email error line */
+@font-face {
+  font-family: 'DIN Pro';
+  src: url('../fonts/DINPro-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-display: swap;
+}
+
 /* ---------- copy changes for this page ---------- */
 
 /* the scene lines share one style: Bebas Neue (loaded from fonts/ by styles.css), uppercase */
@@ -296,7 +304,7 @@
   position: relative;
   width: 100%;
   max-width: 730px;
-  padding-bottom: 54px; /* 8px gap + the 46px flower */
+  padding-bottom: 32px; /* 12px gap + the 20px error line */
 }
 
 .waitlist {
@@ -355,60 +363,85 @@
   }
 }
 
-/* --- error: a sad little flower beside the message, under the input --- */
+/* --- error: one line under the form, starting where the typed text starts (the form's 3px
+   border and 5px padding, plus the input's left padding: 1.2em of its font size, 1em where the
+   form stacks on small screens). The same look as the text links ("‹ Back" in "Start with
+   yourself"): DIN Pro Medium 16px, sentence case, no underline. Shared by both email forms. --- */
 
 .waitlist-note {
   position: absolute;
-  left: 14px;
+  left: calc(8px + 1.2 * clamp(16px, 1.3vw, 20px));
   right: 0;
   bottom: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+  text-align: left;
+}
+
+@media (max-width: 560px) {
+  .waitlist-note {
+    left: calc(8px + clamp(16px, 1.3vw, 20px));
+  }
 }
 
 .waitlist-note[hidden] {
   display: none;
 }
 
-/* Bebas capitals sit above the middle of their line box; the top padding moves the middle of
-   the letters onto the row's centre line, where the flower's centre is */
 .waitlist-note p {
-  padding-top: 0.21em;
-  font-family: 'Bebas Neue', 'Anton', Impact, sans-serif;
-  font-size: clamp(19px, 1.6vw, 24px);
-  line-height: 0.92;
-  text-transform: uppercase;
+  font: 500 16px/20px 'DIN Pro', system-ui, sans-serif;
+  text-transform: none;
 }
 
-/* (#cta outranks the scroll-driven state of the section's big flower) */
-#cta .sad-flower {
-  --fold: 0.5; /* petals pulled in, flat mouth, eyes closed */
-  --eyes: 0;
-  flex: none;
-  width: 46px;
-  transform: rotate(-14deg);
+/* ---------- the demo video: a white sticker card, centred under its line ----------
+   square, like the video: ~15% larger than the old 4:5 card on desktop (64.4vh keeps it on screen,
+   at most 760px), full width minus 16px margins on mobile. Straight: it holds a video, so it never
+   rotates. */
+
+:root {
+  /* the white halo around stickers: the tags' white edge at desktop size (0.3em of a ~22px tag) */
+  --halo: 7px;
 }
 
-/* the face shifts up and across, towards the input above */
-.sad-flower .f-features {
-  transform: translate(3px, -6px);
+@media (max-width: 800px) {
+  :root {
+    --halo: 5px;
+  }
 }
 
-/* ---------- the demo video: the phone is already in the video, on the brand blue ----------
-   about 560px square on desktop beside the line; full width minus 16px margins on mobile */
+.demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  text-align: center;
+}
+
+/* the line above the video: Dharma Gothic E like the other big titles, ~18% larger than the
+   Bebas section lines (same case and place) */
+#demo .statement {
+  max-width: 11em;
+  font-family: 'Dharma Gothic E', 'Anton', Impact, sans-serif;
+  font-size: calc(1.18 * clamp(34px, 3.9vw, 60px));
+  line-height: 0.74;
+}
 
 .demo-video {
   position: relative;
-  justify-self: center;
-  width: min(100%, 560px);
+  width: min(760px, 64.4vh, 100%);
   aspect-ratio: 1;
+  overflow: hidden;
+  background: #fff;
+  border: 2.5px solid var(--ink);
+  border-radius: 32px;
+  box-shadow: 0 0 0 var(--halo) #fff;
 }
 
+/* the video fills the card exactly, clipped to its corners */
 .demo-video video {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: cover;
 }
 
 /* reduced motion: the poster waits with a small play button (compare.js) */
